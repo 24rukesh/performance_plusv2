@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stitched Dataframe Preview</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background: #ffffff;
+      color: #262730;
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 16px;
+    }
+    .stApp {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 3rem;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #262730;
+      margin-bottom: 0.5rem;
+    }
+    .stButton-primary {
+      background: #f63366;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .stButton-primary:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+    .meta-row {
+      color: #555;
+      font-size: 14px;
+      margin-bottom: 1rem;
+    }
+    .meta-row code {
+      font-family: 'IBM Plex Mono', monospace;
+      background: #f0f2f6;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 13px;
+    }
+    .stDataframe {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      margin: 1.5rem 0;
+    }
+    .stDataframe thead tr {
+      background: #f0f2f6;
+    }
+    .stDataframe th {
+      padding: 8px 12px;
+      font-weight: 600;
+      color: #262730;
+      border-bottom: 2px solid #e6e9ef;
+      text-align: left;
+    }
+    .stDataframe td {
+      padding: 8px 12px;
+      color: #262730;
+      border-bottom: 1px solid #e6e9ef;
+    }
+    .stDataframe tr:hover td {
+      background: #f8f9fb;
+    }
+    .notes-cell {
+      max-width: 320px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .run-btn-area {
+      margin-top: 1.5rem;
+    }
+    .run-note {
+      color: #888;
+      font-size: 13px;
+      margin-top: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="stApp">
+    <h1>Stitched Dataframe Preview</h1>
+
+    <p class="meta-row">
+      20 rows &times; 9 columns &middot; joined on <code>session_id</code>
+      (<code>inner</code>, <code>validate=m:1</code>)
+    </p>
+
+    <table class="stDataframe">
+      <thead>
+        <tr>
+          <th>session_id</th>
+          <th>campaign_id</th>
+          <th>clicks</th>
+          <th>impressions</th>
+          <th>cost_usd</th>
+          <th>conversion_rate</th>
+          <th>lead_status</th>
+          <th>projected_value</th>
+          <th>sales_notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>sess_001</td>
+          <td>cmp_b2b_search</td>
+          <td>142</td>
+          <td>4800</td>
+          <td>87.50</td>
+          <td>0.031</td>
+          <td>Disqualified</td>
+          <td>0.00</td>
+          <td class="notes-cell">Lead thought we were a consumer app. Angry when I mentioned enterprise pricing. Bad targeting.</td>
+        </tr>
+        <tr>
+          <td>sess_002</td>
+          <td>cmp_competitor_conquest</td>
+          <td>38</td>
+          <td>2100</td>
+          <td>42.00</td>
+          <td>0.078</td>
+          <td>Qualified</td>
+          <td>5000.00</td>
+          <td class="notes-cell">Perfect fit. Loved the ROI dashboard feature. Ready to sign next week.</td>
+        </tr>
+        <tr>
+          <td>sess_003</td>
+          <td>cmp_b2b_search</td>
+          <td>118</td>
+          <td>5100</td>
+          <td>92.00</td>
+          <td>0.028</td>
+          <td>Disqualified</td>
+          <td>0.00</td>
+          <td class="notes-cell">Wrong segment, looking for SMB tooling, not enterprise. Not worth following up.</td>
+        </tr>
+        <tr>
+          <td>sess_004</td>
+          <td>cmp_competitor_conquest</td>
+          <td>44</td>
+          <td>1900</td>
+          <td>38.50</td>
+          <td>0.084</td>
+          <td>Qualified</td>
+          <td>8500.00</td>
+          <td class="notes-cell">Came from competitor X, ready to switch. Pricing aligned, contract review in progress.</td>
+        </tr>
+        <tr>
+          <td>sess_010</td>
+          <td>cmp_retargeting</td>
+          <td>87</td>
+          <td>3200</td>
+          <td>65.00</td>
+          <td>0.042</td>
+          <td>Nurture</td>
+          <td>1200.00</td>
+          <td class="notes-cell">Still evaluating, revisited pricing page twice. Needs more time before committing.</td>
+        </tr>
+        <tr>
+          <td>sess_014</td>
+          <td>cmp_linkedin_outbound</td>
+          <td>45</td>
+          <td>3800</td>
+          <td>95.00</td>
+          <td>0.018</td>
+          <td>Nurture</td>
+          <td>800.00</td>
+          <td class="notes-cell">Connected on LinkedIn, lukewarm interest. Has not responded to last two follow-ups.</td>
+        </tr>
+        <tr>
+          <td>sess_017</td>
+          <td>cmp_brand_awareness</td>
+          <td>210</td>
+          <td>7800</td>
+          <td>145.00</td>
+          <td>0.008</td>
+          <td>Nurture</td>
+          <td>300.00</td>
+          <td class="notes-cell">Top-of-funnel only, no specific pain point surfaced yet. Early awareness stage.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="run-btn-area">
+      <button class="stButton-primary">Run Analysis</button>
+      <p class="run-note">Click to send aggregated campaign data to gpt-4o for budget recommendations.</p>
+    </div>
+  </div>
+</body>
+</html>
