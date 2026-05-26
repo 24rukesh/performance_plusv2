@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Load Demo Data</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background: #ffffff;
+      color: #262730;
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 16px;
+    }
+    .stApp {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 3rem;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #262730;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      color: #555;
+      font-size: 16px;
+      margin-bottom: 2rem;
+    }
+    .stFileUploader {
+      background: #f0f2f6;
+      border: 1px dashed #b0b8c5;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .stFileUploader strong {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #262730;
+      font-size: 15px;
+    }
+    .stFileUploader .upload-hint {
+      color: #888;
+      font-size: 14px;
+      margin-bottom: 0.75rem;
+    }
+    .stFileUploader code {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: #555;
+      background: #e8eaf0;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      display: block;
+      line-height: 1.6;
+    }
+    .columns-label {
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stButton-primary {
+      background: #f63366;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin-top: 0.5rem;
+    }
+    .stButton-primary:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+    .demo-note {
+      color: #888;
+      font-size: 13px;
+      margin-top: 0.75rem;
+    }
+    .demo-note code {
+      font-family: 'IBM Plex Mono', monospace;
+      background: #f0f2f6;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .section-label {
+      font-size: 13px;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid #e6e9ef;
+      margin: 2rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="stApp">
+    <h1>Load Demo Data</h1>
+    <p class="subtitle">
+      Click the button below to load pre-built demo data — no file upload required.
+      The web analytics and CRM CSVs will be stitched on <strong>session_id</strong>.
+    </p>
+
+    <p class="section-label">Expected CSV Schemas (for reference)</p>
+
+    <div class="stFileUploader">
+      <strong>Web Analytics CSV</strong>
+      <p class="upload-hint">Drop file or click to browse</p>
+      <p class="columns-label">Required columns</p>
+      <code>session_id, campaign_id, clicks, impressions, cost_usd, conversion_rate</code>
+    </div>
+
+    <div class="stFileUploader">
+      <strong>CRM Leads CSV</strong>
+      <p class="upload-hint">Drop file or click to browse</p>
+      <p class="columns-label">Required columns</p>
+      <code>session_id, campaign_id, lead_status, projected_value, sales_notes</code>
+    </div>
+
+    <button class="stButton-primary">Load Demo Data</button>
+
+    <p class="demo-note">
+      Demo mode uses pre-built mock CSVs from <code>data/</code> directory.
+    </p>
+  </div>
+</body>
+</html>
