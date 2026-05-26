@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budget Action Results</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background: #ffffff;
+      color: #262730;
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 16px;
+    }
+    .stApp {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 3rem;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #262730;
+      margin-bottom: 0.5rem;
+    }
+    .stDataframe {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      margin: 1.5rem 0;
+    }
+    .stDataframe thead tr {
+      background: #f0f2f6;
+    }
+    .stDataframe th {
+      padding: 8px 12px;
+      font-weight: 600;
+      color: #262730;
+      border-bottom: 2px solid #e6e9ef;
+      text-align: left;
+    }
+    .stDataframe td {
+      padding: 8px 12px;
+      color: #262730;
+      border-bottom: 1px solid #e6e9ef;
+    }
+    .stDataframe tr:hover td {
+      background: #f8f9fb;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .badge-increase {
+      background: #09ab3b;
+      color: #ffffff;
+    }
+    .badge-pause {
+      background: #ff2b2b;
+      color: #ffffff;
+    }
+    .badge-decrease {
+      background: #faca2b;
+      color: #262730;
+    }
+    .badge-insufficient {
+      background: #808495;
+      color: #ffffff;
+    }
+    .pct-positive {
+      color: #09ab3b;
+      font-weight: 600;
+    }
+    .pct-negative {
+      color: #ff2b2b;
+      font-weight: 600;
+    }
+    .pct-neutral {
+      color: #808495;
+      font-weight: 600;
+    }
+    .exec-summary {
+      background: #f0f2f6;
+      border-left: 4px solid #f63366;
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+      font-size: 15px;
+    }
+    .exec-summary strong {
+      color: #262730;
+    }
+    .results-note {
+      color: #888;
+      font-size: 13px;
+      margin-top: 1rem;
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div class="stApp">
+    <h1>Budget Action Results</h1>
+
+    <div class="exec-summary">
+      <strong>This week:</strong> pause 1 campaign, scale 1, decrease 2, hold 1 (insufficient data).
+    </div>
+
+    <table class="stDataframe">
+      <thead>
+        <tr>
+          <th>campaign_id</th>
+          <th>action</th>
+          <th>budget_change_%</th>
+          <th>reasoning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>cmp_b2b_search</td>
+          <td><span class="badge badge-pause">PAUSE</span></td>
+          <td class="pct-negative">-100%</td>
+          <td>Lead thought we were a consumer app; bad targeting signal across multiple sessions</td>
+        </tr>
+        <tr>
+          <td>cmp_competitor_conquest</td>
+          <td><span class="badge badge-increase">INCREASE</span></td>
+          <td class="pct-positive">+35%</td>
+          <td>Multiple qualified leads, high projected value, ready-to-sign sentiment in notes</td>
+        </tr>
+        <tr>
+          <td>cmp_retargeting</td>
+          <td><span class="badge badge-decrease">DECREASE</span></td>
+          <td class="pct-negative">-20%</td>
+          <td>Mixed sentiment; some nurture-stage leads but low conversion rate</td>
+        </tr>
+        <tr>
+          <td>cmp_linkedin_outbound</td>
+          <td><span class="badge badge-decrease">DECREASE</span></td>
+          <td class="pct-negative">-15%</td>
+          <td>Below-average engagement, no strong qualifier signals in notes</td>
+        </tr>
+        <tr>
+          <td>cmp_brand_awareness</td>
+          <td><span class="badge badge-insufficient">INSUFFICIENT DATA</span></td>
+          <td class="pct-neutral">0%</td>
+          <td>Too few sessions to draw a statistically meaningful conclusion</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="results-note">
+      Reasoning grounded in sales-rep notes — see DESIGN.md for the qualitative vs quantitative contrast story.
+    </p>
+  </div>
+</body>
+</html>
