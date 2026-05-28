@@ -1,0 +1,21 @@
+session_id,campaign_id,lead_status,projected_value,sales_notes
+sess_001,cmp_b2b_search,Disqualified,0.0,Lead thought we were a consumer app. Angry when I mentioned enterprise pricing. Bad targeting.
+sess_002,cmp_competitor_conquest,Qualified,5000.0,Perfect fit. Loved the ROI dashboard feature. Ready to sign next week.
+sess_003,cmp_b2b_search,Disqualified,0.0,"Wrong segment, looking for SMB tooling, not enterprise. Not worth following up."
+sess_004,cmp_competitor_conquest,Qualified,8500.0,"Came from competitor X, ready to switch. Pricing aligned, contract review in progress."
+sess_005,cmp_b2b_search,Disqualified,0.0,"Asked about consumer features, not enterprise. Confused about our product category."
+sess_006,cmp_competitor_conquest,Qualified,6200.0,"Decision-maker on call, strong interest in attribution features. Deciding next month."
+sess_007,cmp_b2b_search,Disqualified,0.0,"Budget too small, decision-maker not involved. Misaligned from the start."
+sess_008,cmp_competitor_conquest,Qualified,4800.0,"Previously using a legacy tool, impressed by our CRM integration demo. High buy intent."
+sess_009,cmp_b2b_search,Disqualified,0.0,"Looking for a free tool, pushed back on pricing immediately. Not enterprise-grade buyer."
+sess_010,cmp_retargeting,Nurture,1200.0,"Still evaluating, revisited pricing page twice. Needs more time before committing."
+sess_011,cmp_retargeting,Disqualified,0.0,Revisited the site but ultimately went with a cheaper option. Not a fit at this price.
+sess_012,cmp_retargeting,Nurture,2100.0,"Warm lead, opened 3 follow-up emails. Scheduled a second demo call for next week."
+sess_013,cmp_retargeting,Disqualified,0.0,Re-engaged briefly but team budget frozen until Q3. Unlikely to close this quarter.
+sess_014,cmp_linkedin_outbound,Nurture,800.0,"Connected on LinkedIn, lukewarm interest. Has not responded to last two follow-ups."
+sess_015,cmp_linkedin_outbound,Nurture,600.0,"Slow follow-up, initially interested but now unresponsive. May need a break in cadence."
+sess_016,cmp_linkedin_outbound,Nurture,950.0,"Soft interest only, no clear use case articulated. Will revisit in 60 days."
+sess_017,cmp_brand_awareness,Nurture,300.0,"Top-of-funnel only, no specific pain point surfaced yet. Early awareness stage."
+sess_018,cmp_brand_awareness,Disqualified,0.0,"Clicked through from a broad awareness ad, not a decision-maker, no follow-up needed."
+sess_019,cmp_b2b_search,Disqualified,0.0,"No enterprise need, mentioned they run a small agency. Completely out of our ICP."
+sess_020,cmp_competitor_conquest,Qualified,5500.0,Strong referral from an existing customer. Motivated to switch before Q3 budget cycle.

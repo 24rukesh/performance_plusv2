@@ -1,3 +1,10 @@
 .DS_Store
 .planning/
 plan v2.rtf
+.env
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+.ruff_cache/
+.pytest_cache/
