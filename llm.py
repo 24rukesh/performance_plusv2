@@ -1,4 +1,5 @@
 import logging
+import os
 import time
 from typing import Literal
 
@@ -15,7 +16,8 @@ from tenacity import (
 
 logger = logging.getLogger(__name__)
 
-client = OpenAI()  # reads OPENAI_API_KEY from environment
+_env_key = os.environ.get("OPENAI_API_KEY")
+client = OpenAI(api_key=_env_key) if _env_key else None
 
 MODEL = "gpt-4o-2024-08-06"
 MAX_TOKENS = 2000

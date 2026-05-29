@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
+from openai import OpenAI
 from data import load_demo_data, compute_campaign_agg
 from dotenv import load_dotenv
+import llm
 from llm import run_analysis
 from ui_helpers import build_results_table_html, build_exec_summary_html
 
@@ -11,13 +13,36 @@ st.set_page_config(
     page_title="Performance Plus",
     page_icon=None,
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
 st.markdown(
     '<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">',
     unsafe_allow_html=True,
 )
+
+with st.sidebar:
+    st.subheader("OpenAI API Key")
+    api_key_input = st.text_input(
+        "Paste your key",
+        type="password",
+        placeholder="sk-...",
+        help="Used only for this session — never stored.",
+        label_visibility="collapsed",
+    )
+    if api_key_input:
+        llm.client = OpenAI(api_key=api_key_input)
+    elif not llm.client:
+        llm.client = None
+
+    if llm.client is not None:
+        st.success("Key set — ready to analyse.")
+    else:
+        st.warning("Enter your OpenAI API key to enable Run Analysis.")
+        st.markdown(
+            "Get a key at [platform.openai.com/api-keys](https://platform.openai.com/api-keys)",
+            unsafe_allow_html=False,
+        )
 
 st.title("Performance Plus")
 st.write("Autonomous Semantic Attribution Engine")
@@ -70,7 +95,9 @@ if st.session_state["merged_df"] is not None:
     st.dataframe(merged_df, use_container_width=True, hide_index=True)
 
     if st.session_state["campaign_agg"] is not None:
-        if st.button("Run Analysis", type="primary"):
+        if llm.client is None:
+            st.info("Enter your OpenAI API key in the sidebar to enable Run Analysis.")
+        elif st.button("Run Analysis", type="primary"):
             error_occurred = False
             with st.status("Analysing campaigns...", expanded=True) as status:
                 status.write("Calling gpt-4o...")
