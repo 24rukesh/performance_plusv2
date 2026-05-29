@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 from data import load_demo_data, compute_campaign_agg
+from dotenv import load_dotenv
+
+load_dotenv()
 
 st.set_page_config(
     page_title="Performance Plus",
