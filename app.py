@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 from data import load_demo_data, compute_campaign_agg
 from dotenv import load_dotenv
+from llm import run_analysis
+from ui_helpers import build_results_table_html, build_exec_summary_html
 
 load_dotenv()
 
@@ -10,6 +12,11 @@ st.set_page_config(
     page_icon=None,
     layout="wide",
     initial_sidebar_state="collapsed",
+)
+
+st.markdown(
+    '<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">',
+    unsafe_allow_html=True,
 )
 
 st.title("Performance Plus")
@@ -24,6 +31,8 @@ if "merged_df" not in st.session_state:
     st.session_state["merged_df"] = None
 if "campaign_agg" not in st.session_state:
     st.session_state["campaign_agg"] = None
+if "analysis_result" not in st.session_state:
+    st.session_state["analysis_result"] = None
 
 if st.button("Load Demo Data", type="primary"):
     try:
@@ -60,5 +69,31 @@ if st.session_state["merged_df"] is not None:
 
     st.dataframe(merged_df, use_container_width=True, hide_index=True)
 
-    st.button("Run Analysis", type="primary", disabled=True)
-    st.caption("AI analysis coming in Phase 3.")
+    if st.session_state["campaign_agg"] is not None:
+        if st.button("Run Analysis", type="primary"):
+            error_occurred = False
+            with st.status("Analysing campaigns...", expanded=True) as status:
+                status.write("Calling gpt-4o...")
+                try:
+                    result = run_analysis(st.session_state["campaign_agg"])
+                except Exception:
+                    status.update(label="Analysis failed", state="error")
+                    error_occurred = True
+                if not error_occurred:
+                    status.write("Structuring output...")
+                    st.session_state["analysis_result"] = result
+                    status.update(label="Done ✓", state="complete", expanded=False)
+            if error_occurred:
+                st.error("Analysis failed. Check your OPENAI_API_KEY or retry.")
+                st.stop()
+
+        if st.session_state["analysis_result"] is None:
+            st.caption("Click 'Run Analysis' to send aggregated campaign data to gpt-4o for budget recommendations.")
+
+    if st.session_state["analysis_result"] is not None:
+        result = st.session_state["analysis_result"]
+        st.subheader("Budget Action Results")
+        st.markdown(build_exec_summary_html(result.executive_summary), unsafe_allow_html=True)
+        st.subheader("Campaign Budget Actions")
+        st.markdown(build_results_table_html(result), unsafe_allow_html=True)
+        st.caption(f"Reasoning grounded in sales-rep qualitative notes — {len(result.campaigns)} campaigns analysed.")
