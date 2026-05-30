@@ -1,6 +1,8 @@
+import json
 import logging
 import os
 import time
+from pathlib import Path
 from typing import Literal
 
 import pandas as pd
@@ -93,6 +95,9 @@ def _call_llm(csv_text: str) -> AnalysisResult:
 
 def run_analysis(campaign_agg: pd.DataFrame) -> AnalysisResult:
     """Serialize campaign_agg as CSV and send to gpt-4o. Returns a validated AnalysisResult."""
+    # per D-01, D-11: fixture path when DEMO_MODE=1 and no live key is present
+    if os.environ.get("DEMO_MODE") == "1" and client is None:
+        return _load_fixture()
     t0 = time.perf_counter()
     csv_text = campaign_agg.to_csv(index=False)
     result = _call_llm(csv_text)
@@ -102,3 +107,10 @@ def run_analysis(campaign_agg: pd.DataFrame) -> AnalysisResult:
         len(result.campaigns),
     )
     return result
+
+
+def _load_fixture() -> AnalysisResult:
+    # per D-02: fixture lives at data/fixture_results.json, loaded via model_validate
+    fixture_path = Path(__file__).parent / "data" / "fixture_results.json"
+    data = json.loads(fixture_path.read_text())
+    return AnalysisResult.model_validate(data)

@@ -1,3 +1,5 @@
+import os
+
 import streamlit as st
 import pandas as pd
 from openai import OpenAI
@@ -8,6 +10,9 @@ from llm import run_analysis
 from ui_helpers import build_results_table_html, build_exec_summary_html
 
 load_dotenv()
+
+# per D-04, D-05: module-level flag; DEMO_MODE=1 activates offline fixture path
+DEMO_MODE = os.environ.get("DEMO_MODE") == "1"
 
 st.set_page_config(
     page_title="Performance Plus",
@@ -23,26 +28,34 @@ st.markdown(
 
 with st.sidebar:
     st.subheader("OpenAI API Key")
-    api_key_input = st.text_input(
-        "Paste your key",
-        type="password",
-        placeholder="sk-...",
-        help="Used only for this session — never stored.",
-        label_visibility="collapsed",
-    )
-    if api_key_input:
-        llm.client = OpenAI(api_key=api_key_input)
-    elif not llm.client:
-        llm.client = None
-
-    if llm.client is not None:
-        st.success("Key set — ready to analyse.")
+    # per D-04: in DEMO_MODE with no live key, show green badge instead of key input
+    if DEMO_MODE and llm.client is None:
+        st.success("✅ Demo Mode — running with cached results")
     else:
-        st.warning("Enter your OpenAI API key to enable Run Analysis.")
-        st.markdown(
-            "Get a key at [platform.openai.com/api-keys](https://platform.openai.com/api-keys)",
-            unsafe_allow_html=False,
+        api_key_input = st.text_input(
+            "Paste your key",
+            type="password",
+            placeholder="sk-...",
+            help="Used only for this session — never stored.",
+            label_visibility="collapsed",
         )
+        if api_key_input:
+            llm.client = OpenAI(api_key=api_key_input)
+        elif not llm.client:
+            llm.client = None
+
+        if llm.client is not None:
+            st.success("Key set — ready to analyse.")
+        else:
+            st.warning("Enter your OpenAI API key to enable Run Analysis.")
+            st.markdown(
+                "Get a key at [platform.openai.com/api-keys](https://platform.openai.com/api-keys)",
+                unsafe_allow_html=False,
+            )
+
+# per D-05: info banner renders in main column above title when DEMO_MODE=1
+if DEMO_MODE:
+    st.info("ℹ️ Running in demo mode — cached results, no live API call")
 
 st.title("Performance Plus")
 st.write("Autonomous Semantic Attribution Engine")
@@ -95,7 +108,9 @@ if st.session_state["merged_df"] is not None:
     st.dataframe(merged_df, use_container_width=True, hide_index=True)
 
     if st.session_state["campaign_agg"] is not None:
-        if llm.client is None:
+        # per D-11: DEMO_MODE with no key is allowed; key presence takes precedence over fixture
+        demo_ready = DEMO_MODE and llm.client is None
+        if llm.client is None and not demo_ready:
             st.info("Enter your OpenAI API key in the sidebar to enable Run Analysis.")
         elif st.button("Run Analysis", type="primary"):
             error_occurred = False
