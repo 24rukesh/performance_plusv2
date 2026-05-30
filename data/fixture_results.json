@@ -1,0 +1,45 @@
+{
+  "executive_summary": "The portfolio shows varied performance, with 'cmp_competitor_conquest' being the standout performer with strong buy signals. The most important action is to increase the budget for this campaign to capitalize on high conversion potential. Conversely, 'cmp_b2b_search' should be paused due to severe misalignment with the target market, as indicated by the sales notes.",
+  "campaigns": [
+    {
+      "campaign_id": "cmp_b2b_search",
+      "budget_action": "pause",
+      "percentage_change": -100,
+      "semantic_reasoning": "The sales notes indicate complete misalignment with phrases like 'Wrong segment' and 'No enterprise need.'",
+      "confidence": 1.0,
+      "evidence_count": 6
+    },
+    {
+      "campaign_id": "cmp_brand_awareness",
+      "budget_action": "insufficient_data",
+      "percentage_change": 0,
+      "semantic_reasoning": "Sales notes define prospects as 'Top-of-funnel only,' lacking solid indicators for budget adjustment.",
+      "confidence": 0.5,
+      "evidence_count": 2
+    },
+    {
+      "campaign_id": "cmp_competitor_conquest",
+      "budget_action": "increase",
+      "percentage_change": 50,
+      "semantic_reasoning": "Multiple notes highlight strong alignment and readiness to switch, such as 'Ready to sign next week' and 'Motivated to switch.'",
+      "confidence": 1.0,
+      "evidence_count": 5
+    },
+    {
+      "campaign_id": "cmp_linkedin_outbound",
+      "budget_action": "decrease",
+      "percentage_change": -30,
+      "semantic_reasoning": "Indications of lukewarm interest and responsiveness issues suggest reduced urgency, e.g., 'lukewarm interest' and 'unresponsive.'",
+      "confidence": 0.8,
+      "evidence_count": 3
+    },
+    {
+      "campaign_id": "cmp_retargeting",
+      "budget_action": "decrease",
+      "percentage_change": -20,
+      "semantic_reasoning": "Notes show mixed signals with some engagement but also lost opportunities due to pricing, e.g., 'Went with a cheaper option.'",
+      "confidence": 0.7,
+      "evidence_count": 4
+    }
+  ]
+}

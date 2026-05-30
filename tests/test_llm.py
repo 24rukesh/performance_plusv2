@@ -1,7 +1,8 @@
 import pytest
 import pandas as pd
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 from pydantic import ValidationError
+import llm
 from llm import run_analysis, CampaignAction, AnalysisResult
 
 
@@ -132,3 +133,48 @@ def test_campaign_action_schema_valid():
     assert isinstance(data["semantic_reasoning"], str)
     assert isinstance(data["confidence"], float)
     assert isinstance(data["evidence_count"], int)
+
+
+def test_demo_mode_returns_fixture(monkeypatch):
+    monkeypatch.setenv("DEMO_MODE", "1")
+    monkeypatch.setattr("llm.client", None)
+    mock_call = MagicMock()
+    with patch("llm._call_llm", mock_call):
+        result = run_analysis(_minimal_agg_df())
+    assert isinstance(result, AnalysisResult)
+    assert result.executive_summary
+    assert mock_call.call_count == 0
+
+
+def test_demo_mode_bypassed_when_client_set(monkeypatch):
+    monkeypatch.setenv("DEMO_MODE", "1")
+    mock_client = MagicMock()
+    mock_client.beta.chat.completions.parse.return_value = _make_mock_completion(
+        parsed=_make_valid_analysis_result()
+    )
+    monkeypatch.setattr("llm.client", mock_client)
+    mock_fixture = MagicMock()
+    with patch("llm._load_fixture", mock_fixture):
+        run_analysis(_minimal_agg_df())
+    assert mock_client.beta.chat.completions.parse.call_count == 1
+    assert mock_fixture.call_count == 0
+
+
+def test_live_mode_when_demo_not_set(monkeypatch):
+    monkeypatch.delenv("DEMO_MODE", raising=False)
+    mock_client = MagicMock()
+    mock_client.beta.chat.completions.parse.return_value = _make_mock_completion(
+        parsed=_make_valid_analysis_result()
+    )
+    monkeypatch.setattr("llm.client", mock_client)
+    mock_fixture = MagicMock()
+    with patch("llm._load_fixture", mock_fixture):
+        run_analysis(_minimal_agg_df())
+    assert mock_client.beta.chat.completions.parse.call_count == 1
+    assert mock_fixture.call_count == 0
+
+
+def test_fixture_schema():
+    result = llm._load_fixture()
+    assert isinstance(result, AnalysisResult)
+    assert len(result.campaigns) == 5
