@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: — SaaS Foundation
-status: executing
-stopped_at: Phase 8 Plan 02 complete — compose.yaml orchestration committed (e25b8e4)
-last_updated: "2026-06-01T12:27:07Z"
-last_activity: "2026-06-01 — Phase 8 Plan 02 executed: postgres healthcheck + fastapi depends_on dict form + landing service + caddy depends_on extended (INFRA-04, INFRA-05)"
+status: complete
+stopped_at: Phase 8 verified — v2.0 milestone complete
+last_updated: "2026-06-01"
+last_activity: "2026-06-01 — Phase 8 verified (7/7 passed): landing/Dockerfile + compose.yaml + Caddyfile — all three services routed via Caddy on agent.rukesh.in"
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 13
-  completed_plans: 12
-  percent: 92
+  completed_plans: 13
+  percent: 100
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-01 for v2.0 milestone)
 ## Current Position
 
 Phase: 8 — Infrastructure Update
-Plan: 08-02 complete — next: 08-03 (Caddyfile multi-route, Wave 3)
-Status: In progress — 2/3 plans complete
-Last activity: 2026-06-01 — Phase 8 Plan 02 executed: compose.yaml postgres healthcheck + fastapi depends_on service_healthy + landing service + caddy depends_on [app, fastapi, landing] (INFRA-04, INFRA-05)
+Plan: 08-03 complete — Phase 8 COMPLETE (3/3 plans)
+Status: Phase 8 complete — all plans executed
+Last activity: 2026-06-01 — Phase 8 Plan 03 executed: Caddyfile multi-route block — handle /api/* → fastapi:8000, handle_path /app* → app:8501, handle catch-all → landing:3000 (INFRA-06)
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Last activity: 2026-06-01 — Phase 8 Plan 02 executed: compose.yaml postgres he
 | 07-landing-page-ui-polish (plan 02) | 1 | ~22 min | ~22 min |
 | 08-infrastructure-update (plan 01) | 1 | 2 min | 2 min |
 | 08-infrastructure-update (plan 02) | 1 | ~2 min | ~2 min |
+| 08-infrastructure-update (plan 03) | 1 | ~2 min | ~2 min |
 
 **Recent Trend:**
 
@@ -163,6 +164,13 @@ Phase 8 Plan 02 decisions:
 - landing service has no env_file key — NEXT_PUBLIC_* vars baked at build time, no server-side secrets per D-14/T-08-07
 - landing service has no target key in build — landing/Dockerfile has only one output stage (runner) as default last stage
 
+Phase 8 Plan 03 decisions:
+
+- handle /api/* (not handle_path) preserves /api/ prefix — all FastAPI routes are /api/-prefixed; stripping would 404 every route (D-07)
+- handle_path /app* (not /app/*) — /app* glob matches bare /app and /app/anything; /app/* would miss bare /app (Pitfall 2, D-06)
+- Catch-all handle placed last — Caddy first-match-wins evaluation order enforced in document order (D-09)
+- No explicit Upgrade/Connection headers — Caddy reverse_proxy auto-upgrades WebSocket; prevents #1 Streamlit self-hosted proxy bug
+
 ### Pending Todos
 
 None.
@@ -182,5 +190,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-06-01
-Stopped at: Phase 8 Plan 02 complete — compose.yaml orchestration committed (e25b8e4)
-Resume file: .planning/phases/08-infrastructure-update/08-03-PLAN.md
+Stopped at: Phase 8 Plan 03 complete — Caddyfile multi-route block committed (cf5f7fe). Phase 8 COMPLETE.
+Resume file: None — milestone v2.0 complete

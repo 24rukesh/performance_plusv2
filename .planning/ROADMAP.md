@@ -4,7 +4,7 @@
 
 - ✅ **v1.0-design — User Flow** — Phase 1 (shipped 2026-05-26)
 - ✅ **v1.0 — Working Product** — Phases 2-4 (shipped 2026-05-30)
-- 🚧 **v2.0 — SaaS Foundation** — Phases 5-8 (in progress)
+- ✅ **v2.0 — SaaS Foundation** — Phases 5-8 (shipped 2026-06-01)
 
 ## Phases
 
@@ -37,7 +37,7 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
 - [x] **Phase 5: FastAPI Service** — Python FastAPI with five API endpoints, Postgres for result persistence, API key auth
 - [x] **Phase 6: Waitlist Backend** — Waitlist Postgres table, POST /api/waitlist endpoint, SMTP email notification on signup
 - [x] **Phase 7: Landing Page & UI Polish** — Next.js marketing site (hero, How It Works, animated demo, features, waitlist form) plus Streamlit branded header and improved results layout
-- [ ] **Phase 8: Infrastructure Update** — Docker compose adds Next.js + FastAPI services, Caddy routes all three apps on one domain
+- [x] **Phase 8: Infrastructure Update** — Docker compose adds Next.js + FastAPI services, Caddy routes all three apps on one domain
 
 ## Phase Details
 
@@ -135,14 +135,14 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
   2. An API request to /api/* is proxied to the FastAPI container and returns the expected response.
   3. A browser request to /app serves the Streamlit app with WebSocket connections maintained (no blank UI).
 
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans executed
   **Wave 1** *(parallel — no dependencies)*
 
   - [x] 08-01-PLAN.md — Next.js standalone build (INFRA-04): `landing/next.config.ts` adds `output: 'standalone'`, new `landing/.dockerignore` with `.env*` glob (Pitfall 4 guard), new `landing/Dockerfile` (node:20-alpine multi-stage with Alpine `addgroup`/`adduser` for UID 1001 appuser, exact public→standalone→static COPY order)
   **Wave 2** *(blocked on 08-01)*
 
   - [x] 08-02-PLAN.md — Compose orchestration (INFRA-04, INFRA-05): `compose.yaml` adds `landing` service (no ports, no env_file), `postgres` healthcheck via `pg_isready`, `fastapi` depends_on dict form with `condition: service_healthy` (Pitfall 6), `caddy` depends_on list extended to `[app, fastapi, landing]`
-  - [ ] 08-03-PLAN.md — Caddy multi-route (INFRA-06): `caddy/Caddyfile` replaced with three-handler block — `handle /api/*` → fastapi:8000 (prefix preserved), `handle_path /app*` → app:8501 (prefix stripped, glob `/app*` not `/app/*` per Pitfall 2), `handle` catch-all → landing:3000
+  - [x] 08-03-PLAN.md — Caddy multi-route (INFRA-06): `caddy/Caddyfile` replaced with three-handler block — `handle /api/*` → fastapi:8000 (prefix preserved), `handle_path /app*` → app:8501 (prefix stripped, glob `/app*` not `/app/*` per Pitfall 2), `handle` catch-all → landing:3000
 
   **Cross-cutting constraints:**
 
@@ -165,8 +165,8 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
 | 5. FastAPI Service | v2.0 | 4/4 | ✅ Complete | 2026-06-01 |
 | 6. Waitlist Backend | v2.0 | 2/2 | ✅ Complete | 2026-06-01 |
 | 7. Landing Page & UI Polish | v2.0 | 4/4 | ✅ Complete | 2026-06-01 |
-| 8. Infrastructure Update | v2.0 | 2/3 | In Progress|  |
+| 8. Infrastructure Update | v2.0 | 3/3 | ✅ Complete | 2026-06-01 |
 
 ---
 *Roadmap created: 2026-05-26*
-*Last updated: 2026-06-01 — Phase 8 Plan 01 complete (1/3): landing/Dockerfile + .dockerignore + next.config.ts (INFRA-04). Wave 2 next: compose.yaml orchestration + caddy/Caddyfile multi-route*
+*Last updated: 2026-06-01 — Phase 8 Plan 03 complete (3/3): Caddyfile three-route block (INFRA-06). Phase 8 complete. Milestone v2.0 complete.*
