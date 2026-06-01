@@ -1,10 +1,22 @@
-.DS_Store
+# Secrets
+.env
+
+# AI tool config (internal)
+CLAUDE.md
+
+# GSD planning artifacts (internal workflow)
 .planning/
 plan v2.rtf
-.env
+
+# Python
 __pycache__/
 *.pyc
-.venv/
+*.pyo
 *.egg-info/
+.venv/
+
+# Tools
+.DS_Store
 .ruff_cache/
 .pytest_cache/
+
