@@ -4,8 +4,8 @@ milestone: v2.0
 milestone_name: SaaS Foundation
 status: planning
 stopped_at: —
-last_updated: "2026-06-01T06:15:16.000Z"
-last_activity: 2026-06-01 — Phase 5 Plan 04 complete; 14 TestClient contract tests for all 5 API endpoints
+last_updated: "2026-06-01T00:00:00.000Z"
+last_activity: 2026-06-01 — Phase 6 planned (2 plans, 2 waves: foundations → wire endpoint + tests)
 progress:
   total_phases: 4
   completed_phases: 1
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-06-01 for v2.0 milestone)
 
 ## Current Position
 
-Phase: 5 — FastAPI Service
-Plan: 04 complete — Phase 5 fully complete
-Status: Phase 5 complete — all 4 plans done; api/ package, Dockerfile, compose.yaml, main.py, and contract tests all implemented
-Last activity: 2026-06-01 — Phase 5 Plan 04 complete (1 task, 1 commit — 14 TestClient contract tests)
+Phase: 6 — Waitlist Backend
+Plan: Planned — 2 plans in 2 waves; ready to execute
+Status: Phase 6 planned — 06-01 (foundations: email-validator, SMTP vars, waitlist table, WaitlistRequest, email_utils), 06-02 (wire endpoint + tests)
+Last activity: 2026-06-01 — Phase 6 planned (2 plans: Wave 1 foundations, Wave 2 wire endpoint + 4 contract tests)
 
 ## Performance Metrics
 

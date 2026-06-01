@@ -73,7 +73,11 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
   1. A visitor who submits the waitlist form receives an on-page confirmation message within seconds.
   2. The submitted email and signup timestamp appear in the Postgres waitlist table immediately after submission.
   3. The product owner receives an SMTP email at info@k-innovative.com containing the submitted email address and timestamp within one minute of signup.
-**Plans**: TBD
+**Plans:** 2 plans
+  **Wave 1** *(parallel — no dependencies)*
+  - [ ] 06-01-PLAN.md — Foundations: email-validator dep, .env.example SMTP vars, waitlist table + insert_waitlist_email, WaitlistRequest model, api/email_utils.py SMTP helper
+  **Wave 2** *(blocked on Wave 1 completion)*
+  - [ ] 06-02-PLAN.md — Wire endpoint + tests: CORSMiddleware, POST /api/waitlist public handler, 4 contract tests (200/422/409/500)
 
 ### Phase 7: Landing Page & UI Polish
 **Goal**: A visitor landing on the root domain sees a polished marketing page that explains the product, shows an animated demo, and lets them join the waitlist — while existing Streamlit users see a branded header with a link back to the marketing site.
@@ -109,10 +113,10 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
 | 3. AI Analysis & Results Display | v1.0 | 3/3 | ✅ Complete | 2026-05-30 |
 | 4. Deploy & Ship | v1.0 | 3/3 | ✅ Complete | 2026-05-30 |
 | 5. FastAPI Service | v2.0 | 4/4 | ✅ Complete | 2026-06-01 |
-| 6. Waitlist Backend | v2.0 | 0/? | Not started | - |
+| 6. Waitlist Backend | v2.0 | 0/2 | Planned | - |
 | 7. Landing Page & UI Polish | v2.0 | 0/? | Not started | - |
 | 8. Infrastructure Update | v2.0 | 0/? | Not started | - |
 
 ---
 *Roadmap created: 2026-05-26*
-*Last updated: 2026-06-01 — Phase 5 Plan 04 complete (14 TestClient contract tests — Phase 5 fully complete)*
+*Last updated: 2026-06-01 — Phase 6 planned (2 plans, 2 waves: foundations → wire endpoint + tests)*
