@@ -218,32 +218,209 @@ Each campaign gets one row in the results table:
 
 ## Deployment
 
-### Docker (self-hosted VPS)
+The app runs as four Docker services behind a Caddy reverse proxy:
+
+| Service | Image / Build target | Internal port | Public path |
+|---------|----------------------|---------------|-------------|
+| `landing` | Next.js (`landing/Dockerfile`) | 3000 | `/` (catch-all) |
+| `app` | Streamlit (`Dockerfile` → `streamlit` stage) | 8501 | `/app*` |
+| `fastapi` | FastAPI (`Dockerfile` → `api` stage) | 8000 | `/api/*` |
+| `caddy` | `caddy:2-alpine` | 80 / 443 | TLS termination + routing |
+| `postgres` | `postgres:16-alpine` | 5432 | internal only |
+
+---
+
+### Prerequisites
+
+- A VPS with Docker 24+ and Docker Compose v2 installed (`docker compose version`)
+- A domain (or subdomain) with an A record pointing at your server's public IP
+- Port 80 and 443 open in your firewall / security group
+- Git installed on the server
+
+---
+
+### 1. Clone the repo
 
 ```bash
-# 1. Create .env on the server (never commit this)
-cp .env.example .env
-# Edit .env: set DEMO_MODE=1 (and optionally OPENAI_API_KEY)
-
-# 2. Build and start
-docker compose up -d --build
-
-# 3. Check services
-docker compose ps
-docker compose logs caddy --tail=50   # confirm Let's Encrypt cert
+git clone https://github.com/24rukesh/performance_plusv2.git
+cd performance_plusv2
 ```
 
-Edit `caddy/Caddyfile` to replace `agent.rukesh.in` with your domain before deploying.
+---
 
-### Coolify
+### 2. Configure environment variables
 
-1. Add New Resource → Application → connect your Git repo
-2. Build pack: **Dockerfile**, Port: **8501**
-3. Set environment variables: `DEMO_MODE=1` (and `OPENAI_API_KEY` if you want server-side live mode)
-4. Set your domain, enable HTTPS
-5. Deploy
+```bash
+cp .env.example .env
+```
 
-> Do not set `OPENAI_API_KEY` on the server if you want the public-facing demo mode UI to show. The `DEMO_MODE` badge only renders when no server-side key is present — judges and visitors use their own key via the sidebar if they want a live call.
+Open `.env` and fill in every value:
+
+```env
+# OpenAI — leave blank to force demo mode server-wide
+OPENAI_API_KEY=sk-...your-key...
+
+# Set to 1 to serve cached fixture results (no API key needed for visitors)
+DEMO_MODE=1
+
+# Internal API key checked by the FastAPI service
+API_KEY=generate-a-random-string
+
+# Postgres — used by the FastAPI service
+DATABASE_URL=postgresql://ppuser:CHANGE_ME@postgres:5432/performance_plus
+POSTGRES_PASSWORD=CHANGE_ME
+
+# SMTP — used by the waitlist endpoint to send notification emails
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=your-smtp-username
+SMTP_PASS=your-smtp-password
+SMTP_FROM=noreply@yourdomain.com
+```
+
+> **Security:** `.env` is in `.gitignore`. Never commit it.
+
+---
+
+### 3. Set your domain in Caddyfile
+
+Open `caddy/Caddyfile` and replace `agent.rukesh.in` with your domain:
+
+```
+yourdomain.com {
+
+    handle /api/* {
+        reverse_proxy fastapi:8000
+    }
+
+    handle_path /app* {
+        reverse_proxy app:8501
+    }
+
+    handle {
+        reverse_proxy landing:3000
+    }
+}
+```
+
+Caddy provisions a Let's Encrypt TLS certificate automatically on first boot — no manual cert work required.
+
+---
+
+### 4. Build and start
+
+```bash
+docker compose up -d --build
+```
+
+This builds all four images and starts every service. The first build takes 3–5 minutes (dependency installation). Subsequent builds use layer cache and finish in under 60 seconds.
+
+---
+
+### 5. Verify the deployment
+
+```bash
+# All five containers should show "Up" or "healthy"
+docker compose ps
+
+# Tail Caddy to confirm the TLS cert issued
+docker compose logs caddy --tail=50
+
+# Check each service health endpoint
+curl https://yourdomain.com/api/health        # → {"status":"ok"}
+curl https://yourdomain.com/app/_stcore/health # → "ok"
+curl https://yourdomain.com/                   # → Next.js landing HTML
+```
+
+---
+
+### 6. Check individual service logs
+
+```bash
+docker compose logs app      --tail=100 -f   # Streamlit
+docker compose logs fastapi  --tail=100 -f   # FastAPI / waitlist
+docker compose logs landing  --tail=100 -f   # Next.js
+docker compose logs postgres --tail=100 -f   # Postgres
+docker compose logs caddy    --tail=100 -f   # Caddy / TLS
+```
+
+---
+
+### Updating after a code change
+
+```bash
+git pull origin main
+docker compose up -d --build
+```
+
+Only the services whose images changed are rebuilt. Caddy and Postgres restart instantly (no rebuild).
+
+---
+
+### Rolling back
+
+```bash
+# Find the previous image ID for a service
+docker images | grep performance_plusv2
+
+# Restart from a previous image tag (if you tagged before deploying)
+docker compose down app
+docker compose up -d app
+```
+
+For a hard rollback, check out the previous commit and rebuild:
+
+```bash
+git checkout <previous-commit-sha>
+docker compose up -d --build
+```
+
+---
+
+### Stopping / teardown
+
+```bash
+# Stop all services (preserves volumes)
+docker compose down
+
+# Stop and delete all volumes including the Postgres database
+docker compose down -v
+```
+
+---
+
+### Environment variable reference
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `OPENAI_API_KEY` | No | — | GPT-4o key. Omit to force `DEMO_MODE` globally. |
+| `DEMO_MODE` | No | `""` | Set to `1` to serve cached fixture results to all visitors. |
+| `API_KEY` | Yes | — | Internal secret the FastAPI service validates on protected routes. |
+| `DATABASE_URL` | Yes | — | Full Postgres connection string. Must use the `postgres` service hostname inside Compose. |
+| `POSTGRES_PASSWORD` | Yes | — | Postgres password — must match the password in `DATABASE_URL`. |
+| `SMTP_HOST` | Yes (waitlist) | — | SMTP server hostname. |
+| `SMTP_PORT` | Yes (waitlist) | `587` | SMTP port (587 = STARTTLS, 465 = SSL). |
+| `SMTP_USER` | Yes (waitlist) | — | SMTP username / login. |
+| `SMTP_PASS` | Yes (waitlist) | — | SMTP password / app password. |
+| `SMTP_FROM` | Yes (waitlist) | — | `From:` address for waitlist notification emails. |
+
+---
+
+### Architecture diagram
+
+```
+Internet
+    │
+    ▼
+Caddy :443 (TLS)
+    ├── /api/*        → FastAPI :8000
+    ├── /app*         → Streamlit :8501
+    └── /             → Next.js landing :3000
+                              │
+                         FastAPI :8000
+                              │
+                         Postgres :5432
+```
 
 ---
 
@@ -268,28 +445,42 @@ Tests cover: data layer merge logic, LLM schema validation, DEMO_MODE intercept 
 
 ```
 performance_plus/
-├── app.py                  # Streamlit UI — main entry point
-├── llm.py                  # GPT-4o client, Pydantic schema, run_analysis()
-├── data.py                 # CSV ingestion and session_id merge
-├── ui_helpers.py           # HTML table and badge rendering
-├── data_generator.py       # Synthetic demo data generator
+├── app.py                    # Streamlit UI — main entry point
+├── llm.py                    # GPT-4o client, Pydantic schema, run_analysis()
+├── data.py                   # CSV ingestion and session_id merge
+├── ui_helpers.py             # HTML table and badge rendering
+├── data_generator.py         # Synthetic demo data generator
 ├── data/
-│   ├── web_analytics.csv   # Demo web analytics (20 sessions, 5 campaigns)
-│   ├── crm_data.csv        # Demo CRM data (20 rows, real rep-style notes)
+│   ├── web_analytics.csv     # Demo web analytics (20 sessions, 5 campaigns)
+│   ├── crm_data.csv          # Demo CRM data (20 rows, real rep-style notes)
 │   └── fixture_results.json  # Cached GPT-4o output for DEMO_MODE
+├── api/
+│   ├── main.py               # FastAPI app — health + waitlist routes
+│   ├── models.py             # Pydantic request/response models
+│   ├── db.py                 # Postgres connection + DDL helpers
+│   └── email_utils.py        # SMTP notification helper
+├── landing/                  # Next.js 14 marketing / waitlist site
+│   ├── app/                  # App Router pages and layout
+│   ├── components/           # React components (Hero, Waitlist form, etc.)
+│   ├── Dockerfile            # Node 20 Alpine multi-stage build
+│   └── next.config.ts        # output: standalone for Docker
 ├── scripts/
-│   └── generate_fixture.py # Regenerate fixture from a live GPT-4o run
+│   └── generate_fixture.py   # Regenerate fixture from a live GPT-4o run
 ├── tests/
-│   ├── test_llm.py         # LLM unit tests (10 tests)
-│   ├── test_data.py        # Data layer tests
-│   └── test_deploy_config.py  # Deploy config invariant tests (8 tests)
+│   ├── test_llm.py           # LLM unit tests
+│   ├── test_data.py          # Data layer tests
+│   ├── test_api.py           # FastAPI route contract tests
+│   ├── test_phase7_landing.py # Landing page component tests
+│   └── test_deploy_config.py # Deploy config invariant tests
 ├── caddy/
-│   └── Caddyfile           # Caddy reverse proxy config
+│   └── Caddyfile             # Caddy reverse proxy — domain + routing rules
 ├── .streamlit/
-│   └── config.toml         # Theme + CORS/XSRF settings
-├── Dockerfile              # Multi-stage build
-├── compose.yaml            # App + Caddy services
-├── DEMO-SCRIPT.md          # Loom narration script
+│   └── config.toml           # Streamlit theme + CORS/XSRF settings
+├── Dockerfile                # Multi-stage: builder → streamlit + api stages
+├── compose.yaml              # Five-service stack: app, fastapi, landing, caddy, postgres
+├── SECURITY.md               # Security policy and responsible disclosure
+├── DEMO-SCRIPT.md            # Loom narration script
+├── .env.example              # Environment variable template
 ├── pyproject.toml
 └── uv.lock
 ```
