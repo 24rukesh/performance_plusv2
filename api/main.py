@@ -5,10 +5,12 @@ from contextlib import asynccontextmanager
 
 import pandas as pd
 from fastapi import Depends, FastAPI, HTTPException, Security
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import APIKeyHeader
 
-from api.db import get_latest_result, init_db, insert_analysis_result, insert_pending_session
-from api.models import AnalyzeRequest, CrmWebhookRecord
+from api.db import get_latest_result, init_db, insert_analysis_result, insert_pending_session, insert_waitlist_email
+from api.email_utils import send_waitlist_notification
+from api.models import AnalyzeRequest, CrmWebhookRecord, WaitlistRequest
 from data import compute_campaign_agg
 from llm import AnalysisResult, run_analysis
 
@@ -29,6 +31,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan, title="Performance Plus API", version="2.0.0")
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 
 @app.get("/api/health")
@@ -68,3 +71,13 @@ def get_campaign_actions(campaign_id: str, _: None = Depends(verify_api_key)):
     if row is None:
         raise HTTPException(status_code=404, detail=f"No analysis results found for campaign_id={campaign_id}")
     return row
+
+
+@app.post("/api/waitlist", status_code=200)
+def waitlist_signup(body: WaitlistRequest):
+    signed_up_at = insert_waitlist_email(body.email)
+    try:
+        send_waitlist_notification(body.email, signed_up_at)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"SMTP error: {exc}")
+    return {"message": "You're on the waitlist! We'll be in touch."}

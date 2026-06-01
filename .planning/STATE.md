@@ -4,8 +4,8 @@ milestone: v2.0
 milestone_name: SaaS Foundation
 status: planning
 stopped_at: —
-last_updated: "2026-06-01T00:00:00.000Z"
-last_activity: 2026-06-01 — Phase 6 planned (2 plans, 2 waves: foundations → wire endpoint + tests)
+last_updated: "2026-06-01T08:08:51Z"
+last_activity: 2026-06-01 — Phase 6 Plan 01 complete (email-validator, waitlist DDL, insert_waitlist_email, WaitlistRequest, send_waitlist_notification)
 progress:
   total_phases: 4
   completed_phases: 1
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-01 for v2.0 milestone)
 ## Current Position
 
 Phase: 6 — Waitlist Backend
-Plan: Planned — 2 plans in 2 waves; ready to execute
-Status: Phase 6 planned — 06-01 (foundations: email-validator, SMTP vars, waitlist table, WaitlistRequest, email_utils), 06-02 (wire endpoint + tests)
-Last activity: 2026-06-01 — Phase 6 planned (2 plans: Wave 1 foundations, Wave 2 wire endpoint + 4 contract tests)
+Plan: 02 of 2 — ready to execute
+Status: Phase 6 Plan 01 complete — foundations done; 06-02 (wire CORSMiddleware + POST /api/waitlist endpoint + 4 contract tests) is next
+Last activity: 2026-06-01 — Phase 6 Plan 01 complete (email-validator, waitlist DDL, insert_waitlist_email, WaitlistRequest, send_waitlist_notification)
 
 ## Performance Metrics
 
@@ -49,6 +49,7 @@ Last activity: 2026-06-01 — Phase 6 planned (2 plans: Wave 1 foundations, Wave
 | 05-fastapi-service (plan 02) | 1 | ~5 min | ~5 min |
 | 05-fastapi-service (plan 03) | 1 | ~5 min | ~5 min |
 | 05-fastapi-service (plan 04) | 1 | ~3 min | ~3 min |
+| 06-waitlist-backend (plan 01) | 1 | 2 min | 2 min |
 
 **Recent Trend:**
 
@@ -113,6 +114,14 @@ Phase 5 Plan 04 decisions:
 - Patch api.main.insert_analysis_result (not api.db) because 'from api.db import' creates local binding
 - _make_client helper defers app import until after all monkeypatches are applied
 
+Phase 6 Plan 01 decisions:
+
+- email-validator>=2.0,<3.0 added as explicit dep (pydantic EmailStr requires it — not bundled with pydantic)
+- except psycopg2.errors.UniqueViolation placed OUTSIDE with conn: block — ensures context manager completes rollback before except runs (Pitfall 1)
+- os.environ["KEY"] bracket access for required SMTP vars (SMTP_HOST/USER/PASS/FROM) — KeyError surfaces misconfiguration immediately
+- No try/except in send_waitlist_notification — exceptions propagate to caller for 500 mapping (D-06 fail-loudly)
+- RETURNING signed_up_at in INSERT — avoids Python-side datetime drift from DB-generated timestamp
+
 ### Pending Todos
 
 None.
@@ -131,6 +140,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-06-01T06:15:16Z
-Stopped at: Completed 05-04-PLAN.md (14 TestClient contract tests for all 5 API endpoints — 1 task, 1 commit)
+Last session: 2026-06-01T08:08:51Z
+Stopped at: Completed 06-01-PLAN.md (email-validator dep, SMTP vars, waitlist DDL, WaitlistRequest, send_waitlist_notification — 3 tasks, 3 commits)
 Resume file: None

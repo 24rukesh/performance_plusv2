@@ -17,6 +17,7 @@
 - [ ] **WAIT-01**: Visitor can submit their email address via a waitlist signup form on the landing page and receive a confirmation message
 - [ ] **WAIT-02**: Submitted waitlist emails are stored in a Postgres database with signup timestamp and source
 - [ ] **WAIT-03**: Owner receives an SMTP email notification at info@k-innovative.com for each new waitlist signup, including the submitted email and timestamp
+<!-- WAIT-02 and WAIT-03 primitives complete in 06-01 (DDL, insert_waitlist_email, send_waitlist_notification); endpoint wired in 06-02 -->
 
 ### API Integration
 
@@ -78,9 +79,9 @@
 | LAND-02 | Phase 7 | Pending |
 | LAND-03 | Phase 7 | Pending |
 | LAND-04 | Phase 7 | Pending |
-| WAIT-01 | Phase 6 | Pending |
-| WAIT-02 | Phase 6 | Pending |
-| WAIT-03 | Phase 6 | Pending |
+| WAIT-01 | Phase 6 | Pending (06-02) |
+| WAIT-02 | Phase 6 | Partial (06-01 primitives; 06-02 wires endpoint) |
+| WAIT-03 | Phase 6 | Partial (06-01 primitives; 06-02 wires endpoint) |
 | API-01 | Phase 5 | Complete (05-03) |
 | API-02 | Phase 5 | Complete (05-01, 05-03) |
 | API-03 | Phase 5 | Complete (05-01, 05-03) |
@@ -100,4 +101,4 @@
 
 ---
 *Requirements defined: 2026-06-01*
-*Last updated: 2026-06-01 — Phase 5 Plan 03 complete; API-01 through API-05 all implemented in api/main.py*
+*Last updated: 2026-06-01 — Phase 6 Plan 01 complete; WAIT-02 and WAIT-03 primitives in place (insert_waitlist_email, send_waitlist_notification); endpoint wired in 06-02*

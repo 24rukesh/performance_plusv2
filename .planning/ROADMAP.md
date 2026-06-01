@@ -75,7 +75,7 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
   3. The product owner receives an SMTP email at info@k-innovative.com containing the submitted email address and timestamp within one minute of signup.
 **Plans:** 2 plans
   **Wave 1** *(parallel — no dependencies)*
-  - [ ] 06-01-PLAN.md — Foundations: email-validator dep, .env.example SMTP vars, waitlist table + insert_waitlist_email, WaitlistRequest model, api/email_utils.py SMTP helper
+  - [x] 06-01-PLAN.md — Foundations: email-validator dep, .env.example SMTP vars, waitlist table + insert_waitlist_email, WaitlistRequest model, api/email_utils.py SMTP helper
   **Wave 2** *(blocked on Wave 1 completion)*
   - [ ] 06-02-PLAN.md — Wire endpoint + tests: CORSMiddleware, POST /api/waitlist public handler, 4 contract tests (200/422/409/500)
 
@@ -113,10 +113,10 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
 | 3. AI Analysis & Results Display | v1.0 | 3/3 | ✅ Complete | 2026-05-30 |
 | 4. Deploy & Ship | v1.0 | 3/3 | ✅ Complete | 2026-05-30 |
 | 5. FastAPI Service | v2.0 | 4/4 | ✅ Complete | 2026-06-01 |
-| 6. Waitlist Backend | v2.0 | 0/2 | Planned | - |
+| 6. Waitlist Backend | v2.0 | 1/2 | In Progress | - |
 | 7. Landing Page & UI Polish | v2.0 | 0/? | Not started | - |
 | 8. Infrastructure Update | v2.0 | 0/? | Not started | - |
 
 ---
 *Roadmap created: 2026-05-26*
-*Last updated: 2026-06-01 — Phase 6 planned (2 plans, 2 waves: foundations → wire endpoint + tests)*
+*Last updated: 2026-06-01 — Phase 6 Plan 01 complete (foundations: email-validator, waitlist DDL, WaitlistRequest, send_waitlist_notification)*
