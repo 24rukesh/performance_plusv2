@@ -14,9 +14,9 @@
 
 ### Waitlist
 
-- [ ] **WAIT-01**: Visitor can submit their email address via a waitlist signup form on the landing page and receive a confirmation message
-- [ ] **WAIT-02**: Submitted waitlist emails are stored in a Postgres database with signup timestamp and source
-- [ ] **WAIT-03**: Owner receives an SMTP email notification at info@k-innovative.com for each new waitlist signup, including the submitted email and timestamp
+- [x] **WAIT-01**: Visitor can submit their email address via a waitlist signup form on the landing page and receive a confirmation message
+- [x] **WAIT-02**: Submitted waitlist emails are stored in a Postgres database with signup timestamp and source
+- [x] **WAIT-03**: Owner receives an SMTP email notification at info@k-innovative.com for each new waitlist signup, including the submitted email and timestamp
 <!-- WAIT-02 and WAIT-03 primitives complete in 06-01 (DDL, insert_waitlist_email, send_waitlist_notification); endpoint wired in 06-02 -->
 
 ### API Integration
@@ -79,9 +79,9 @@
 | LAND-02 | Phase 7 | Pending |
 | LAND-03 | Phase 7 | Pending |
 | LAND-04 | Phase 7 | Pending |
-| WAIT-01 | Phase 6 | Pending (06-02) |
-| WAIT-02 | Phase 6 | Partial (06-01 primitives; 06-02 wires endpoint) |
-| WAIT-03 | Phase 6 | Partial (06-01 primitives; 06-02 wires endpoint) |
+| WAIT-01 | Phase 6 | Complete (06-02 endpoint + test_waitlist_valid_email_returns_200) |
+| WAIT-02 | Phase 6 | Complete (06-01 DDL + 06-02 endpoint + test_waitlist_duplicate_email_returns_409) |
+| WAIT-03 | Phase 6 | Complete (06-01 SMTP helper + 06-02 endpoint + test_waitlist_smtp_failure_returns_500) |
 | API-01 | Phase 5 | Complete (05-03) |
 | API-02 | Phase 5 | Complete (05-01, 05-03) |
 | API-03 | Phase 5 | Complete (05-01, 05-03) |
@@ -101,4 +101,4 @@
 
 ---
 *Requirements defined: 2026-06-01*
-*Last updated: 2026-06-01 — Phase 6 Plan 01 complete; WAIT-02 and WAIT-03 primitives in place (insert_waitlist_email, send_waitlist_notification); endpoint wired in 06-02*
+*Last updated: 2026-06-01 — Phase 6 Plan 02 complete; WAIT-01/02/03 all complete (CORSMiddleware, POST /api/waitlist endpoint, 4 contract tests, 18/18 passing)*

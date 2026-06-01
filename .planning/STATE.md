@@ -4,8 +4,8 @@ milestone: v2.0
 milestone_name: SaaS Foundation
 status: planning
 stopped_at: —
-last_updated: "2026-06-01T08:08:51Z"
-last_activity: 2026-06-01 — Phase 6 Plan 01 complete (email-validator, waitlist DDL, insert_waitlist_email, WaitlistRequest, send_waitlist_notification)
+last_updated: "2026-06-01T08:14:06Z"
+last_activity: 2026-06-01 — Phase 6 Plan 02 complete (CORSMiddleware, POST /api/waitlist endpoint, 4 contract tests — all 18 tests passing)
 progress:
   total_phases: 4
   completed_phases: 1
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-01 for v2.0 milestone)
 ## Current Position
 
 Phase: 6 — Waitlist Backend
-Plan: 02 of 2 — ready to execute
-Status: Phase 6 Plan 01 complete — foundations done; 06-02 (wire CORSMiddleware + POST /api/waitlist endpoint + 4 contract tests) is next
-Last activity: 2026-06-01 — Phase 6 Plan 01 complete (email-validator, waitlist DDL, insert_waitlist_email, WaitlistRequest, send_waitlist_notification)
+Plan: 02 of 2 — complete
+Status: Phase 6 complete — both plans done; Phase 7 (Landing Page) is next
+Last activity: 2026-06-01 — Phase 6 Plan 02 complete (CORSMiddleware, POST /api/waitlist endpoint, 4 contract tests — all 18 tests passing)
 
 ## Performance Metrics
 
@@ -50,6 +50,7 @@ Last activity: 2026-06-01 — Phase 6 Plan 01 complete (email-validator, waitlis
 | 05-fastapi-service (plan 03) | 1 | ~5 min | ~5 min |
 | 05-fastapi-service (plan 04) | 1 | ~3 min | ~3 min |
 | 06-waitlist-backend (plan 01) | 1 | 2 min | 2 min |
+| 06-waitlist-backend (plan 02) | 1 | ~2 min | ~2 min |
 
 **Recent Trend:**
 
@@ -122,6 +123,14 @@ Phase 6 Plan 01 decisions:
 - No try/except in send_waitlist_notification — exceptions propagate to caller for 500 mapping (D-06 fail-loudly)
 - RETURNING signed_up_at in INSERT — avoids Python-side datetime drift from DB-generated timestamp
 
+Phase 6 Plan 02 decisions:
+
+- CORSMiddleware registered with allow_origins=["*"], no allow_credentials=True — FastAPI rejects wildcard+credentials (D-05)
+- POST /api/waitlist has no Depends(verify_api_key) — public endpoint per D-12
+- insert_waitlist_email called before send_waitlist_notification — DB commit before email (D-14)
+- SMTP exceptions wrapped as HTTPException(500) with "SMTP error:" prefix — fail loudly (D-06)
+- Tests patch at api.main.insert_waitlist_email / api.main.send_waitlist_notification binding level (Pitfall 5 — from api.db import creates local binding)
+
 ### Pending Todos
 
 None.
@@ -140,6 +149,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-06-01T08:08:51Z
-Stopped at: Completed 06-01-PLAN.md (email-validator dep, SMTP vars, waitlist DDL, WaitlistRequest, send_waitlist_notification — 3 tasks, 3 commits)
+Last session: 2026-06-01T08:14:06Z
+Stopped at: Completed 06-02-PLAN.md (CORSMiddleware, POST /api/waitlist, 4 contract tests — 2 tasks, 2 commits, 18/18 tests passing)
 Resume file: None
