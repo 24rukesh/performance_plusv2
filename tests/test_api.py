@@ -402,3 +402,53 @@ def test_campaigns_actions_returns_latest_result_dict(monkeypatch):
 
     # Verify get_latest_result was called with the correct campaign_id
     mock_get.assert_called_once_with("cmp_test")
+
+
+# ---------------------------------------------------------------------------
+# POST /api/waitlist — four behavioral contracts (WAIT-01, WAIT-02, WAIT-03)
+# ---------------------------------------------------------------------------
+
+
+def test_waitlist_valid_email_returns_200(monkeypatch):
+    """POST /api/waitlist with valid email → 200 + confirmation message (WAIT-01, WAIT-02)."""
+    mock_insert = MagicMock(return_value="2026-06-01T10:00:00+00:00")
+    mock_smtp = MagicMock()
+    with _make_client(monkeypatch, db_overrides={
+        "insert_waitlist_email": mock_insert,
+        "send_waitlist_notification": mock_smtp,
+    }) as client:
+        resp = client.post("/api/waitlist", json={"email": "user@example.com"})
+    assert resp.status_code == 200
+    assert resp.json() == {"message": "You're on the waitlist! We'll be in touch."}
+    mock_insert.assert_called_once_with("user@example.com")
+    mock_smtp.assert_called_once_with("user@example.com", "2026-06-01T10:00:00+00:00")
+
+
+def test_waitlist_invalid_email_returns_422(monkeypatch):
+    """POST /api/waitlist with malformed email → 422 (Pydantic EmailStr validation)."""
+    with _make_client(monkeypatch) as client:
+        resp = client.post("/api/waitlist", json={"email": "not-an-email"})
+    assert resp.status_code == 422
+
+
+def test_waitlist_duplicate_email_returns_409(monkeypatch):
+    """POST /api/waitlist with already-registered email → 409 with detail message (WAIT-02)."""
+    from fastapi import HTTPException
+    mock_insert = MagicMock(side_effect=HTTPException(status_code=409, detail="You're already on the waitlist."))
+    with _make_client(monkeypatch, db_overrides={"insert_waitlist_email": mock_insert}) as client:
+        resp = client.post("/api/waitlist", json={"email": "dup@example.com"})
+    assert resp.status_code == 409
+    assert resp.json() == {"detail": "You're already on the waitlist."}
+
+
+def test_waitlist_smtp_failure_returns_500(monkeypatch):
+    """POST /api/waitlist when SMTP raises → 500 with detail starting 'SMTP error:' (WAIT-03)."""
+    mock_insert = MagicMock(return_value="2026-06-01T10:00:00+00:00")
+    mock_smtp = MagicMock(side_effect=Exception("SMTP connection refused"))
+    with _make_client(monkeypatch, db_overrides={
+        "insert_waitlist_email": mock_insert,
+        "send_waitlist_notification": mock_smtp,
+    }) as client:
+        resp = client.post("/api/waitlist", json={"email": "user@example.com"})
+    assert resp.status_code == 500
+    assert "SMTP error:" in resp.json()["detail"]
