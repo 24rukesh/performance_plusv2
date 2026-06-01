@@ -98,13 +98,12 @@ expected: |
 result: pass
 
 ### 10. Features Section
-result: pass
 expected: |
   Continue scrolling. You should see a "Why Performance Plus" section with 4 feature cards:
   "Semantic Attribution", "CRM Webhook Sync", "n8n Automation", "Budget Routing".
   Each card has a small icon (Heroicons SVG) in pink/accent color at the top, followed by title and description.
   On a large screen they appear in a 4-column grid; on mobile they stack vertically.
-result: [pending]
+result: pass
 
 ### 11. Footer
 expected: |
