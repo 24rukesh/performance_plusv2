@@ -23,6 +23,15 @@ services:
       - internal
     depends_on:
       - app
+      - fastapi
+      - landing
+
+  landing:
+    build:
+      context: ./landing
+    restart: unless-stopped
+    networks:
+      - internal
 
   fastapi:
     build:
