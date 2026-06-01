@@ -1,5 +1,12 @@
-// Composed by Plan 03 (Hero + HowItWorks) and Plan 04 (Demo + Features + Footer).
+import HeroSection from "@/components/HeroSection";
+import HowItWorksSection from "@/components/HowItWorksSection";
 
 export default function Home() {
-  return <main className="min-h-screen" />;
+  return (
+    <main className="min-h-screen">
+      <HeroSection />
+      <HowItWorksSection />
+      {/* Plan 04 appends: <DemoAnimation />, <FeaturesSection />, <Footer /> */}
+    </main>
+  );
 }
