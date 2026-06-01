@@ -17,6 +17,7 @@
 - [x] **WAIT-01**: Visitor can submit their email address via a waitlist signup form on the landing page and receive a confirmation message
 - [x] **WAIT-02**: Submitted waitlist emails are stored in a Postgres database with signup timestamp and source
 - [x] **WAIT-03**: Owner receives an SMTP email notification at info@k-innovative.com for each new waitlist signup, including the submitted email and timestamp
+
 <!-- WAIT-02 and WAIT-03 primitives complete in 06-01 (DDL, insert_waitlist_email, send_waitlist_notification); endpoint wired in 06-02 -->
 
 ### API Integration
@@ -35,8 +36,8 @@
 
 ### Infrastructure
 
-- [ ] **INFRA-04**: The Next.js landing page runs in a Docker container deployed on the same VPS as the existing Streamlit app
-- [ ] **INFRA-05**: The FastAPI service runs in a Docker container on the same VPS
+- [x] **INFRA-04**: The Next.js landing page runs in a Docker container deployed on the same VPS as the existing Streamlit app
+- [x] **INFRA-05**: The FastAPI service runs in a Docker container on the same VPS
 - [ ] **INFRA-06**: Caddy routes incoming traffic so that / serves the Next.js landing page, /api proxies to FastAPI, and /app proxies to the Streamlit container — all on the same domain
 
 ## Future Requirements
@@ -90,11 +91,12 @@
 | UI-03 | Phase 7 | Pending |
 | UI-04 | Phase 7 | Pending |
 | UI-05 | Phase 7 | Pending |
-| INFRA-04 | Phase 8 | Pending |
-| INFRA-05 | Phase 8 | Pending |
+| INFRA-04 | Phase 8 | Complete |
+| INFRA-05 | Phase 8 | Complete |
 | INFRA-06 | Phase 8 | Pending |
 
 **Coverage:**
+
 - v2.0 requirements: 18 total
 - Mapped to phases: 18
 - Unmapped: 0 ✓

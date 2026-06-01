@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: — SaaS Foundation
-status: in-progress
-stopped_at: Phase 8 Plan 01 complete — ready for Plan 02 (compose.yaml orchestration)
-last_updated: "2026-06-01"
-last_activity: 2026-06-01 — Phase 8 Plan 01 executed: landing/Dockerfile + .dockerignore + next.config.ts standalone output
+status: executing
+stopped_at: Phase 8 Plan 02 complete — compose.yaml orchestration committed (e25b8e4)
+last_updated: "2026-06-01T12:27:07Z"
+last_activity: "2026-06-01 — Phase 8 Plan 02 executed: postgres healthcheck + fastapi depends_on dict form + landing service + caddy depends_on extended (INFRA-04, INFRA-05)"
 progress:
   total_phases: 4
   completed_phases: 3
   total_plans: 13
-  completed_plans: 11
-  percent: 85
+  completed_plans: 12
+  percent: 92
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-01 for v2.0 milestone)
 ## Current Position
 
 Phase: 8 — Infrastructure Update
-Plan: 08-01 complete — next: 08-02 (compose.yaml orchestration, Wave 2)
-Status: In progress — 1/3 plans complete
-Last activity: 2026-06-01 — Phase 8 Plan 01 executed: landing/next.config.ts + landing/.dockerignore + landing/Dockerfile (INFRA-04)
+Plan: 08-02 complete — next: 08-03 (Caddyfile multi-route, Wave 3)
+Status: In progress — 2/3 plans complete
+Last activity: 2026-06-01 — Phase 8 Plan 02 executed: compose.yaml postgres healthcheck + fastapi depends_on service_healthy + landing service + caddy depends_on [app, fastapi, landing] (INFRA-04, INFRA-05)
 
 ## Performance Metrics
 
@@ -54,6 +54,7 @@ Last activity: 2026-06-01 — Phase 8 Plan 01 executed: landing/next.config.ts +
 | 07-landing-page-ui-polish (plan 01) | 1 | 2 min | 2 min |
 | 07-landing-page-ui-polish (plan 02) | 1 | ~22 min | ~22 min |
 | 08-infrastructure-update (plan 01) | 1 | 2 min | 2 min |
+| 08-infrastructure-update (plan 02) | 1 | ~2 min | ~2 min |
 
 **Recent Trend:**
 
@@ -155,6 +156,13 @@ Phase 8 Plan 01 decisions:
 - .env* glob (not bare .env): .env.local contains NEXT_PUBLIC_API_BASE_URL=http://localhost:8000; Next.js reads .env.local at build time; bare .env would not exclude .env.local (Pitfall 4)
 - Alpine addgroup/adduser syntax used (not Debian groupadd/useradd): node:20-alpine uses BusyBox; Debian syntax causes sh: useradd: not found (Pitfall 1)
 
+Phase 8 Plan 02 decisions:
+
+- Postgres healthcheck values: interval 10s, timeout 5s, retries 5, start_period 30s — conventional community values per RESEARCH.md A1 (Claude's Discretion area)
+- caddy depends_on uses list form (not dict form with condition) per D-10 — no health-gating on caddy startup, restart: unless-stopped provides recovery
+- landing service has no env_file key — NEXT_PUBLIC_* vars baked at build time, no server-side secrets per D-14/T-08-07
+- landing service has no target key in build — landing/Dockerfile has only one output stage (runner) as default last stage
+
 ### Pending Todos
 
 None.
@@ -174,5 +182,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-06-01
-Stopped at: Phase 8 Plan 01 complete — landing/Dockerfile + .dockerignore + next.config.ts committed (55cc8de)
-Resume file: .planning/phases/08-infrastructure-update/08-02-PLAN.md
+Stopped at: Phase 8 Plan 02 complete — compose.yaml orchestration committed (e25b8e4)
+Resume file: .planning/phases/08-infrastructure-update/08-03-PLAN.md
