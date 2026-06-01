@@ -1,26 +1,27 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-brand-bg: #0a0a0f;
+  --color-brand-surface: #13131a;
+  --color-brand-border: #1e1e2e;
+  --color-brand-muted: #6b7280;
+  --color-brand-text: #f0f2f6;
+  --color-brand-accent: #f63366;
+  --color-badge-increase: #09ab3b;
+  --color-badge-pause: #ff2b2b;
+  --color-badge-decrease: #faca2b;
+  --color-badge-hold: #808495;
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
