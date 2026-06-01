@@ -33,11 +33,11 @@ DOCKERIGNORE = (REPO_ROOT / ".dockerignore").read_text().splitlines()
 
 
 def test_dockerfile_uses_python_3_11_slim_bookworm_in_both_stages():
-    """Both FROM lines must use the same base image (Pitfall 8 — mismatched base breaks PATH)."""
+    """All FROM lines must use the same base image (Pitfall 8 — mismatched base breaks PATH)."""
     count = DOCKERFILE.count("FROM python:3.11-slim-bookworm")
-    assert count == 2, (
-        f"Expected 'FROM python:3.11-slim-bookworm' to appear exactly 2 times (builder + runtime), "
-        f"found {count}. Both stages must use the identical base image (Pitfall 8)."
+    assert count == 3, (
+        f"Expected 'FROM python:3.11-slim-bookworm' to appear exactly 3 times (builder + streamlit + api), "
+        f"found {count}. All stages must use the identical base image (Pitfall 8)."
     )
 
 
