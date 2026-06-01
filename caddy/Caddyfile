@@ -1,3 +1,17 @@
 agent.rukesh.in {
-    reverse_proxy app:8501
+
+    # FastAPI — prefix preserved (/api/health → /api/health at fastapi:8000)
+    handle /api/* {
+        reverse_proxy fastapi:8000
+    }
+
+    # Streamlit — prefix stripped (/app/session → /session at app:8501)
+    handle_path /app* {
+        reverse_proxy app:8501
+    }
+
+    # Next.js landing — catch-all (must be last)
+    handle {
+        reverse_proxy landing:3000
+    }
 }
