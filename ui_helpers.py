@@ -28,7 +28,7 @@ def _pct_html(value: int) -> str:
     elif value < 0:
         return f'<span style="color:#ff2b2b; font-weight:600;">{value}%</span>'
     else:
-        return f'<span style="color:#808495; font-weight:600;">0%</span>'
+        return '<span style="color:#808495; font-weight:600;">0%</span>'
 
 
 def build_results_table_html(result: AnalysisResult) -> str:
