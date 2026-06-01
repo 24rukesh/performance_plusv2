@@ -165,5 +165,17 @@ if st.session_state["merged_df"] is not None:
         st.subheader("Budget Action Results")
         st.markdown(build_exec_summary_html(result.executive_summary), unsafe_allow_html=True)
         st.subheader("Campaign Budget Actions")
-        st.markdown(build_results_table_html(result), unsafe_allow_html=True)
+        for c in result.campaigns:
+            pct_display = f"+{c.percentage_change}%" if c.percentage_change > 0 else f"{c.percentage_change}%"
+            label = f"{c.campaign_id} — {c.budget_action.upper()} {pct_display}"
+            with st.expander(label, expanded=False):
+                st.markdown(
+                    f"{_badge_html(c.budget_action)}  &nbsp;  {_pct_html(c.percentage_change)}",
+                    unsafe_allow_html=True,
+                )
+                st.write(c.semantic_reasoning)
+                st.caption(
+                    f"Confidence: {round(c.confidence * 100)}%  ·  "
+                    f"Sessions analysed: {c.evidence_count}"
+                )
         st.caption(f"Reasoning grounded in sales-rep qualitative notes — {len(result.campaigns)} campaigns analysed.")
