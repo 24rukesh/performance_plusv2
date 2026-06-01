@@ -26,7 +26,10 @@ def verify_api_key(api_key: str | None = Security(_API_KEY_HEADER)) -> None:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    init_db()
+    try:
+        init_db()
+    except Exception as exc:
+        logger.warning("DB init skipped — database-backed routes will return 503 (%s)", exc)
     yield
 
 

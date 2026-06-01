@@ -9,7 +9,10 @@ from psycopg2.extras import Json
 
 def get_conn():
     """Open a new connection. Caller is responsible for close()."""
-    return psycopg2.connect(os.environ["DATABASE_URL"])
+    url = os.environ.get("DATABASE_URL")
+    if not url:
+        raise RuntimeError("DATABASE_URL is not configured")
+    return psycopg2.connect(url)
 
 
 def init_db() -> None:
