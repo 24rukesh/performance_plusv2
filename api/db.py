@@ -1,7 +1,9 @@
 import os
 
 import psycopg2
+import psycopg2.errors
 import psycopg2.extras  # required: Json adapter + JSONB auto-deserialization
+from fastapi import HTTPException
 from psycopg2.extras import Json
 
 
@@ -34,6 +36,14 @@ def init_db() -> None:
                         projected_value NUMERIC,
                         sales_notes     TEXT,
                         received_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+                    )
+                """)
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS waitlist (
+                        id           SERIAL PRIMARY KEY,
+                        email        TEXT NOT NULL UNIQUE,
+                        signed_up_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                        source       TEXT NOT NULL DEFAULT 'landing_page'
                     )
                 """)
     finally:
@@ -99,5 +109,26 @@ def insert_pending_session(record) -> None:
                         record.sales_notes,
                     ),
                 )
+    finally:
+        conn.close()
+
+
+def insert_waitlist_email(email: str) -> str:
+    """Insert email into waitlist. Returns signed_up_at as ISO string.
+
+    Raises HTTPException(409) on duplicate email (D-07).
+    """
+    conn = get_conn()
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "INSERT INTO waitlist (email, source) VALUES (%s, %s) RETURNING signed_up_at",
+                    (email, "landing_page"),
+                )
+                row = cur.fetchone()
+                return row[0].isoformat()
+    except psycopg2.errors.UniqueViolation:
+        raise HTTPException(status_code=409, detail="You're already on the waitlist.")
     finally:
         conn.close()
