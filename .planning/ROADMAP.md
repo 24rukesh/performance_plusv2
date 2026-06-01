@@ -89,8 +89,21 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
   3. A visitor can see an inline animated demo preview of campaign cards with action badges without leaving the page.
   4. A visitor can read a Features section covering semantic attribution, CRM webhook sync, n8n automation, and budget routing.
   5. A Streamlit app user can see the Performance Plus branded header with icon, tagline, and a visible link to the marketing landing page, with campaign results displayed in an improved expandable layout.
-**Plans**: TBD
-**UI hint**: yes
+**Plans:** 4 plans
+  **Wave 1** *(parallel — no dependencies)*
+  - [ ] 07-01-PLAN.md — Streamlit polish (UI-03, UI-04, UI-05): branded header HTML constant + `st.expander` per-campaign loop replacing `build_results_table_html`, import line refactored without removing the function from `ui_helpers.py`
+  - [ ] 07-02-PLAN.md — Next.js scaffold + foundation (LAND-01 prep): `create-next-app` for `landing/`, Tailwind v4 `@theme` brand/badge tokens + `fadeSlideIn` keyframe in `globals.css`, IBM Plex Sans/Mono via `next/font/google` in `layout.tsx`, shared `components/badge-tokens.ts` mirror, `.env.example`/`.env.local` documenting `NEXT_PUBLIC_API_BASE_URL`
+  **Wave 2** *(blocked on 07-02)*
+  - [ ] 07-03-PLAN.md — Hero + WaitlistForm + HowItWorks (LAND-01, LAND-02): `WaitlistForm.tsx` client island with 5-state status machine fetching `/api/waitlist`, Hero Server Component with locked UI-SPEC copy + dual CTAs, `HowItWorksSection.tsx` 3-step responsive grid, `page.tsx` composes top half
+  **Wave 3** *(blocked on 07-03)*
+  - [ ] 07-04-PLAN.md — DemoAnimation + Features + Footer + verification (LAND-03, LAND-04): `DemoAnimation.tsx` client island with IntersectionObserver-gated CSS keyframes + 4 hardcoded campaign cards, `FeaturesSection.tsx` 4-card grid with Heroicons, `Footer.tsx`, final `page.tsx` composition, `npm run build` + `pytest` gates
+
+  **Cross-cutting constraints:**
+  - No Docker/Caddy changes in Phase 7 — Phase 8 owns infrastructure wiring (per ROADMAP Phase 8 boundary)
+  - Tailwind v4 only — NO `tailwind.config.ts` (Pitfall 1: v4 ignores it silently); all tokens in `@theme` block in `globals.css`
+  - `NEXT_PUBLIC_API_BASE_URL` must remain UNSET in production (Pitfall 3); set only in `landing/.env.local` for local dev
+  - `build_results_table_html` MUST remain in `ui_helpers.py` (tests/test_ui_helpers.py still imports it) — only the `app.py` import is pruned
+  - Locked badge palette (`#09ab3b`, `#ff2b2b`, `#faca2b` w/ `#262730` text, `#808495`) MUST appear identically in `ui_helpers.py`, `landing/components/badge-tokens.ts`, and the `@theme` block (PATTERNS.md §S-1)
 
 ### Phase 8: Infrastructure Update
 **Goal**: All three services (Next.js, FastAPI, Streamlit) run as Docker containers on the same VPS and are accessible from a single domain, with Caddy routing / to the landing page, /api to FastAPI, and /app to Streamlit.
@@ -114,9 +127,9 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
 | 4. Deploy & Ship | v1.0 | 3/3 | ✅ Complete | 2026-05-30 |
 | 5. FastAPI Service | v2.0 | 4/4 | ✅ Complete | 2026-06-01 |
 | 6. Waitlist Backend | v2.0 | 2/2 | ✅ Complete | 2026-06-01 |
-| 7. Landing Page & UI Polish | v2.0 | 0/? | Not started | - |
+| 7. Landing Page & UI Polish | v2.0 | 0/4 | Planned | - |
 | 8. Infrastructure Update | v2.0 | 0/? | Not started | - |
 
 ---
 *Roadmap created: 2026-05-26*
-*Last updated: 2026-06-01 — Phase 6 complete (both plans: waitlist DDL + primitives in 06-01, CORSMiddleware + endpoint + 4 tests in 06-02; WAIT-01/02/03 all done)*
+*Last updated: 2026-06-01 — Phase 7 plans created (4 plans across 3 waves: Streamlit polish + Next.js scaffold in Wave 1; Hero+HowItWorks in Wave 2; Demo+Features+Footer+build verification in Wave 3)*
