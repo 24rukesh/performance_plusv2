@@ -4,14 +4,14 @@ milestone: v2.0
 milestone_name: SaaS Foundation
 status: executing
 stopped_at: —
-last_updated: "2026-06-01T10:54:28Z"
-last_activity: 2026-06-01 — Phase 7 Plan 01 complete (branded header + expander loop in app.py — 2 tasks, 2 commits)
+last_updated: "2026-06-01T11:15:00Z"
+last_activity: 2026-06-01 — Phase 7 Plan 02 complete (Next.js 16 landing/ scaffold + Tailwind v4 @theme tokens + IBM Plex fonts + badge-tokens.ts — 2 tasks, 2 commits)
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 8
-  completed_plans: 5
-  percent: 56
+  completed_plans: 6
+  percent: 69
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-01 for v2.0 milestone)
 ## Current Position
 
 Phase: 7 — Landing Page & UI Polish
-Plan: 1 of 4 — Plan 01 complete
-Status: Executing — Wave 1 partial (07-01 done, 07-02 Next.js scaffold remaining)
-Last activity: 2026-06-01 — 07-01 complete (BRANDED_HEADER_HTML + st.expander loop — UI-03/04/05 delivered)
+Plan: 2 of 4 — Plan 02 complete
+Status: Executing — Wave 1 complete (07-01 + 07-02 done); Wave 2 next (07-03 Hero + HowItWorks)
+Last activity: 2026-06-01 — 07-02 complete (landing/ scaffold + Tailwind v4 @theme + IBM Plex fonts + badge-tokens.ts — 2 tasks, 2 commits)
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Last activity: 2026-06-01 — 07-01 complete (BRANDED_HEADER_HTML + st.expander 
 | 06-waitlist-backend (plan 01) | 1 | 2 min | 2 min |
 | 06-waitlist-backend (plan 02) | 1 | ~2 min | ~2 min |
 | 07-landing-page-ui-polish (plan 01) | 1 | 2 min | 2 min |
+| 07-landing-page-ui-polish (plan 02) | 1 | ~22 min | ~22 min |
 
 **Recent Trend:**
 
@@ -130,6 +131,14 @@ Phase 7 Plan 01 decisions:
 - build_results_table_html removed from app.py import (prevents ruff F401) but function kept in ui_helpers.py (tests/test_ui_helpers.py depends on it)
 - st.expander label is plain-text (Pitfall 2: labels strip HTML); badge HTML rendered inside expander body via st.markdown(unsafe_allow_html=True)
 
+Phase 7 Plan 02 decisions:
+
+- Tailwind v4 @theme block in globals.css (not tailwind.config.ts) — CSS-first config; avoids silent-ignore pitfall
+- IBM_Plex_Sans (400, 600) + IBM_Plex_Mono (400) via next/font/google CSS variable pattern — applied to <html> element
+- badge-tokens.ts LOCKED hex values must equal ui_helpers.py — cross-stack color invariant (S-1)
+- NEXT_PUBLIC_API_BASE_URL left UNSET in production Docker build; Caddy routes /api from same origin (Phase 8)
+- landing/.gitignore updated with !.env.example so template file can be committed
+
 Phase 6 Plan 02 decisions:
 
 - CORSMiddleware registered with allow_origins=["*"], no allow_credentials=True — FastAPI rejects wildcard+credentials (D-05)
@@ -156,6 +165,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-06-01T10:54:28Z
-Stopped at: Completed 07-01-PLAN.md (BRANDED_HEADER_HTML constant + st.expander loop — 2 tasks, 2 commits, 46 tests passing)
+Last session: 2026-06-01T11:15:00Z
+Stopped at: Completed 07-02-PLAN.md (landing/ Tailwind v4 @theme + IBM Plex fonts + badge-tokens.ts — 2 tasks, 2 commits, tsc --noEmit passes)
 Resume file: None

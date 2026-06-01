@@ -75,9 +75,9 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| LAND-01 | Phase 7 | Pending |
-| LAND-02 | Phase 7 | Pending |
-| LAND-03 | Phase 7 | Pending |
+| LAND-01 | Phase 7 | In Progress (07-02 foundation done; 07-03 Hero section remaining) |
+| LAND-02 | Phase 7 | Pending (07-03) |
+| LAND-03 | Phase 7 | In Progress (07-02 badge-tokens.ts + @theme done; 07-04 DemoAnimation remaining) |
 | LAND-04 | Phase 7 | Pending |
 | WAIT-01 | Phase 6 | Complete (06-02 endpoint + test_waitlist_valid_email_returns_200) |
 | WAIT-02 | Phase 6 | Complete (06-01 DDL + 06-02 endpoint + test_waitlist_duplicate_email_returns_409) |
@@ -101,4 +101,4 @@
 
 ---
 *Requirements defined: 2026-06-01*
-*Last updated: 2026-06-01 — Phase 6 Plan 02 complete; WAIT-01/02/03 all complete (CORSMiddleware, POST /api/waitlist endpoint, 4 contract tests, 18/18 passing)*
+*Last updated: 2026-06-01 — Phase 7 Plan 02 complete; LAND-01 + LAND-03 in progress (foundation done, sections in Plans 03/04); Phase 7 Wave 1 complete*

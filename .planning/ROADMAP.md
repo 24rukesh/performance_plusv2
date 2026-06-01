@@ -91,8 +91,8 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
   5. A Streamlit app user can see the Performance Plus branded header with icon, tagline, and a visible link to the marketing landing page, with campaign results displayed in an improved expandable layout.
 **Plans:** 4 plans
   **Wave 1** *(parallel — no dependencies)*
-  - [ ] 07-01-PLAN.md — Streamlit polish (UI-03, UI-04, UI-05): branded header HTML constant + `st.expander` per-campaign loop replacing `build_results_table_html`, import line refactored without removing the function from `ui_helpers.py`
-  - [ ] 07-02-PLAN.md — Next.js scaffold + foundation (LAND-01 prep): `create-next-app` for `landing/`, Tailwind v4 `@theme` brand/badge tokens + `fadeSlideIn` keyframe in `globals.css`, IBM Plex Sans/Mono via `next/font/google` in `layout.tsx`, shared `components/badge-tokens.ts` mirror, `.env.example`/`.env.local` documenting `NEXT_PUBLIC_API_BASE_URL`
+  - [x] 07-01-PLAN.md — Streamlit polish (UI-03, UI-04, UI-05): branded header HTML constant + `st.expander` per-campaign loop replacing `build_results_table_html`, import line refactored without removing the function from `ui_helpers.py`
+  - [x] 07-02-PLAN.md — Next.js scaffold + foundation (LAND-01 prep): `create-next-app` for `landing/`, Tailwind v4 `@theme` brand/badge tokens + `fadeSlideIn` keyframe in `globals.css`, IBM Plex Sans/Mono via `next/font/google` in `layout.tsx`, shared `components/badge-tokens.ts` mirror, `.env.example`/`.env.local` documenting `NEXT_PUBLIC_API_BASE_URL`
   **Wave 2** *(blocked on 07-02)*
   - [ ] 07-03-PLAN.md — Hero + WaitlistForm + HowItWorks (LAND-01, LAND-02): `WaitlistForm.tsx` client island with 5-state status machine fetching `/api/waitlist`, Hero Server Component with locked UI-SPEC copy + dual CTAs, `HowItWorksSection.tsx` 3-step responsive grid, `page.tsx` composes top half
   **Wave 3** *(blocked on 07-03)*
@@ -127,9 +127,9 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
 | 4. Deploy & Ship | v1.0 | 3/3 | ✅ Complete | 2026-05-30 |
 | 5. FastAPI Service | v2.0 | 4/4 | ✅ Complete | 2026-06-01 |
 | 6. Waitlist Backend | v2.0 | 2/2 | ✅ Complete | 2026-06-01 |
-| 7. Landing Page & UI Polish | v2.0 | 0/4 | Planned | - |
+| 7. Landing Page & UI Polish | v2.0 | 2/4 | In Progress | - |
 | 8. Infrastructure Update | v2.0 | 0/? | Not started | - |
 
 ---
 *Roadmap created: 2026-05-26*
-*Last updated: 2026-06-01 — Phase 7 plans created (4 plans across 3 waves: Streamlit polish + Next.js scaffold in Wave 1; Hero+HowItWorks in Wave 2; Demo+Features+Footer+build verification in Wave 3)*
+*Last updated: 2026-06-01 — Phase 7 Wave 1 complete: 07-01 (Streamlit polish) + 07-02 (Next.js scaffold + Tailwind v4 @theme tokens + IBM Plex fonts + badge-tokens.ts) both shipped*
