@@ -36,7 +36,7 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
 
 - [x] **Phase 5: FastAPI Service** — Python FastAPI with five API endpoints, Postgres for result persistence, API key auth
 - [x] **Phase 6: Waitlist Backend** — Waitlist Postgres table, POST /api/waitlist endpoint, SMTP email notification on signup
-- [ ] **Phase 7: Landing Page & UI Polish** — Next.js marketing site (hero, How It Works, animated demo, features, waitlist form) plus Streamlit branded header and improved results layout
+- [x] **Phase 7: Landing Page & UI Polish** — Next.js marketing site (hero, How It Works, animated demo, features, waitlist form) plus Streamlit branded header and improved results layout
 - [ ] **Phase 8: Infrastructure Update** — Docker compose adds Next.js + FastAPI services, Caddy routes all three apps on one domain
 
 ## Phase Details
@@ -94,9 +94,9 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
   - [x] 07-01-PLAN.md — Streamlit polish (UI-03, UI-04, UI-05): branded header HTML constant + `st.expander` per-campaign loop replacing `build_results_table_html`, import line refactored without removing the function from `ui_helpers.py`
   - [x] 07-02-PLAN.md — Next.js scaffold + foundation (LAND-01 prep): `create-next-app` for `landing/`, Tailwind v4 `@theme` brand/badge tokens + `fadeSlideIn` keyframe in `globals.css`, IBM Plex Sans/Mono via `next/font/google` in `layout.tsx`, shared `components/badge-tokens.ts` mirror, `.env.example`/`.env.local` documenting `NEXT_PUBLIC_API_BASE_URL`
   **Wave 2** *(blocked on 07-02)*
-  - [ ] 07-03-PLAN.md — Hero + WaitlistForm + HowItWorks (LAND-01, LAND-02): `WaitlistForm.tsx` client island with 5-state status machine fetching `/api/waitlist`, Hero Server Component with locked UI-SPEC copy + dual CTAs, `HowItWorksSection.tsx` 3-step responsive grid, `page.tsx` composes top half
+  - [x] 07-03-PLAN.md — Hero + WaitlistForm + HowItWorks (LAND-01, LAND-02): `WaitlistForm.tsx` client island with 5-state status machine fetching `/api/waitlist`, Hero Server Component with locked UI-SPEC copy + dual CTAs, `HowItWorksSection.tsx` 3-step responsive grid, `page.tsx` composes top half
   **Wave 3** *(blocked on 07-03)*
-  - [ ] 07-04-PLAN.md — DemoAnimation + Features + Footer + verification (LAND-03, LAND-04): `DemoAnimation.tsx` client island with IntersectionObserver-gated CSS keyframes + 4 hardcoded campaign cards, `FeaturesSection.tsx` 4-card grid with Heroicons, `Footer.tsx`, final `page.tsx` composition, `npm run build` + `pytest` gates
+  - [x] 07-04-PLAN.md — DemoAnimation + Features + Footer + verification (LAND-03, LAND-04): `DemoAnimation.tsx` client island with IntersectionObserver-gated CSS keyframes + 4 hardcoded campaign cards, `FeaturesSection.tsx` 4-card grid with Heroicons, `Footer.tsx`, final `page.tsx` composition, `npm run build` + `pytest` gates
 
   **Cross-cutting constraints:**
   - No Docker/Caddy changes in Phase 7 — Phase 8 owns infrastructure wiring (per ROADMAP Phase 8 boundary)
@@ -113,7 +113,19 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
   1. A browser request to the root domain / serves the Next.js landing page without any manual port specification.
   2. An API request to /api/* is proxied to the FastAPI container and returns the expected response.
   3. A browser request to /app serves the Streamlit app with WebSocket connections maintained (no blank UI).
-**Plans**: TBD
+**Plans:** 3 plans
+  **Wave 1** *(parallel — no dependencies)*
+  - [ ] 08-01-PLAN.md — Next.js standalone build (INFRA-04): `landing/next.config.ts` adds `output: 'standalone'`, new `landing/.dockerignore` with `.env*` glob (Pitfall 4 guard), new `landing/Dockerfile` (node:20-alpine multi-stage with Alpine `addgroup`/`adduser` for UID 1001 appuser, exact public→standalone→static COPY order)
+  **Wave 2** *(blocked on 08-01)*
+  - [ ] 08-02-PLAN.md — Compose orchestration (INFRA-04, INFRA-05): `compose.yaml` adds `landing` service (no ports, no env_file), `postgres` healthcheck via `pg_isready`, `fastapi` depends_on dict form with `condition: service_healthy` (Pitfall 6), `caddy` depends_on list extended to `[app, fastapi, landing]`
+  - [ ] 08-03-PLAN.md — Caddy multi-route (INFRA-06): `caddy/Caddyfile` replaced with three-handler block — `handle /api/*` → fastapi:8000 (prefix preserved), `handle_path /app*` → app:8501 (prefix stripped, glob `/app*` not `/app/*` per Pitfall 2), `handle` catch-all → landing:3000
+
+  **Cross-cutting constraints:**
+  - Pure infrastructure phase — zero application code changes (no .py, no .ts component files modified)
+  - All three services internal-only — only `caddy` publishes ports 80/443 (T-08-06 guard)
+  - `landing/Dockerfile` MUST NOT have any `NEXT_PUBLIC_*` ARG/ENV (D-14 from Phase 7; T-08-03 / Pitfall 4 guard)
+  - `tests/test_deploy_config.py` all 7 invariant tests continue to pass — `reverse_proxy app:8501` substring survives inside new `handle_path /app*` block (Pitfall 3)
+  - Docker build/Caddy validate deferred to VPS deploy-time (Docker not present in local Mac dev shell per RESEARCH.md Environment Availability)
 
 ## Progress
 
@@ -127,9 +139,9 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
 | 4. Deploy & Ship | v1.0 | 3/3 | ✅ Complete | 2026-05-30 |
 | 5. FastAPI Service | v2.0 | 4/4 | ✅ Complete | 2026-06-01 |
 | 6. Waitlist Backend | v2.0 | 2/2 | ✅ Complete | 2026-06-01 |
-| 7. Landing Page & UI Polish | v2.0 | 2/4 | In Progress | - |
-| 8. Infrastructure Update | v2.0 | 0/? | Not started | - |
+| 7. Landing Page & UI Polish | v2.0 | 4/4 | ✅ Complete | 2026-06-01 |
+| 8. Infrastructure Update | v2.0 | 0/3 | Ready to execute | - |
 
 ---
 *Roadmap created: 2026-05-26*
-*Last updated: 2026-06-01 — Phase 7 Wave 1 complete: 07-01 (Streamlit polish) + 07-02 (Next.js scaffold + Tailwind v4 @theme tokens + IBM Plex fonts + badge-tokens.ts) both shipped*
+*Last updated: 2026-06-01 — Phase 8 planned (3 plans across 2 waves): landing/Dockerfile + .dockerignore + next.config.ts (Wave 1) → compose.yaml orchestration + caddy/Caddyfile multi-route (Wave 2 parallel)*

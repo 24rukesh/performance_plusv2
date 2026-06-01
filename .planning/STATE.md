@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
 milestone: v2.0
-milestone_name: SaaS Foundation
-status: verifying
-stopped_at: —
-last_updated: "2026-06-01T11:22:00Z"
-last_activity: 2026-06-01 — Phase 7 complete (4/4 plans done — Streamlit branded header + expander, Next.js landing page, npm build verified, 46 tests passing)
+milestone_name: — SaaS Foundation
+status: ready
+stopped_at: Phase 8 planned — ready to execute (3 plans, 2 waves)
+last_updated: "2026-06-01"
+last_activity: 2026-06-01 — Phase 8 planned (3 plans across 2 waves): landing/Dockerfile + next.config.ts + compose.yaml + Caddyfile
 progress:
   total_phases: 4
-  completed_phases: 2
-  total_plans: 8
-  completed_plans: 8
-  percent: 100
+  completed_phases: 3
+  total_plans: 13
+  completed_plans: 10
+  percent: 75
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-01 for v2.0 milestone)
 
 **Core value:** A marketer can load demo data and instantly get AI-reasoned budget routing decisions based on what sales reps said about each lead — not just what the click data shows.
-**Current focus:** Milestone v2.0 — SaaS Foundation (Phases 5-8)
+**Current focus:** Phase 8 — Infrastructure Update (Docker compose + Caddy routing for Next.js + FastAPI + Streamlit)
 
 ## Current Position
 
-Phase: 7 — Landing Page & UI Polish
-Plan: 4 of 4 — COMPLETE
-Status: Phase 7 complete — all 4 plans done across 3 waves; ready for /gsd:verify-work 7
-Last activity: 2026-06-01 — Phase 7 complete (4/4 plans — Streamlit polish + Next.js full landing page; npm build ✓; 46 tests ✓)
+Phase: 8 — Infrastructure Update
+Plan: Ready to execute — 3 plans (08-01, 08-02, 08-03) across 2 waves
+Status: Planned — verification passed (3/3 requirements, 11/11 decisions covered)
+Last activity: 2026-06-01 — Phase 8 planned (3 plans: landing/Dockerfile, compose.yaml update, Caddyfile multi-route)
 
 ## Performance Metrics
 
@@ -165,6 +165,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-06-01T11:15:00Z
-Stopped at: Completed 07-02-PLAN.md (landing/ Tailwind v4 @theme + IBM Plex fonts + badge-tokens.ts — 2 tasks, 2 commits, tsc --noEmit passes)
-Resume file: None
+Last session: 2026-06-01
+Stopped at: Phase 8 context gathered — ready to plan
+Resume file: .planning/phases/08-infrastructure-update/08-CONTEXT.md
