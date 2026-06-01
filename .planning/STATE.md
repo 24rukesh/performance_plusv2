@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: SaaS Foundation
-status: planning
+status: executing
 stopped_at: —
-last_updated: "2026-06-01T08:14:06Z"
-last_activity: 2026-06-01 — Phase 7 planned (4 plans, 3 waves — Next.js landing page + Streamlit polish; LAND-01/02/03/04, UI-03/04/05 covered)
+last_updated: "2026-06-01T10:54:28Z"
+last_activity: 2026-06-01 — Phase 7 Plan 01 complete (branded header + expander loop in app.py — 2 tasks, 2 commits)
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 8
-  completed_plans: 4
-  percent: 50
+  completed_plans: 5
+  percent: 56
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-01 for v2.0 milestone)
 ## Current Position
 
 Phase: 7 — Landing Page & UI Polish
-Plan: 0 of 4 — ready to execute
-Status: Phase 7 planned — 4 plans in 3 waves, ready for /gsd:execute-phase 7
-Last activity: 2026-06-01 — Phase 7 planned (4 plans, 3 waves — Next.js landing page + Streamlit polish; LAND-01/02/03/04, UI-03/04/05 covered)
+Plan: 1 of 4 — Plan 01 complete
+Status: Executing — Wave 1 partial (07-01 done, 07-02 Next.js scaffold remaining)
+Last activity: 2026-06-01 — 07-01 complete (BRANDED_HEADER_HTML + st.expander loop — UI-03/04/05 delivered)
 
 ## Performance Metrics
 
@@ -51,6 +51,7 @@ Last activity: 2026-06-01 — Phase 7 planned (4 plans, 3 waves — Next.js land
 | 05-fastapi-service (plan 04) | 1 | ~3 min | ~3 min |
 | 06-waitlist-backend (plan 01) | 1 | 2 min | 2 min |
 | 06-waitlist-backend (plan 02) | 1 | ~2 min | ~2 min |
+| 07-landing-page-ui-polish (plan 01) | 1 | 2 min | 2 min |
 
 **Recent Trend:**
 
@@ -123,6 +124,12 @@ Phase 6 Plan 01 decisions:
 - No try/except in send_waitlist_notification — exceptions propagate to caller for 500 mapping (D-06 fail-loudly)
 - RETURNING signed_up_at in INSERT — avoids Python-side datetime drift from DB-generated timestamp
 
+Phase 7 Plan 01 decisions:
+
+- BRANDED_HEADER_HTML placed after load_dotenv() and before st.set_page_config() in source — st.set_page_config remains first Streamlit API call (Pitfall 6)
+- build_results_table_html removed from app.py import (prevents ruff F401) but function kept in ui_helpers.py (tests/test_ui_helpers.py depends on it)
+- st.expander label is plain-text (Pitfall 2: labels strip HTML); badge HTML rendered inside expander body via st.markdown(unsafe_allow_html=True)
+
 Phase 6 Plan 02 decisions:
 
 - CORSMiddleware registered with allow_origins=["*"], no allow_credentials=True — FastAPI rejects wildcard+credentials (D-05)
@@ -149,6 +156,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-06-01T08:14:06Z
-Stopped at: Completed 06-02-PLAN.md (CORSMiddleware, POST /api/waitlist, 4 contract tests — 2 tasks, 2 commits, 18/18 tests passing)
+Last session: 2026-06-01T10:54:28Z
+Stopped at: Completed 07-01-PLAN.md (BRANDED_HEADER_HTML constant + st.expander loop — 2 tasks, 2 commits, 46 tests passing)
 Resume file: None
