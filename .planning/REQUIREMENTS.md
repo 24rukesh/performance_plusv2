@@ -1,0 +1,103 @@
+# Requirements: Performance Plus — SaaS Foundation
+
+**Defined:** 2026-06-01
+**Core Value:** A marketer can load demo data and instantly get AI-reasoned budget routing decisions based on what sales reps actually said about each lead — not just what the click data shows.
+
+## Milestone v2.0 Requirements
+
+### Landing Page
+
+- [ ] **LAND-01**: Visitor can see a hero section with product name, one-liner value prop, a "Try Demo" CTA button that opens the Streamlit app, and a "Join Waitlist" CTA button
+- [ ] **LAND-02**: Visitor can read a "How It Works" 3-step section showing the Upload → AI Analysis → Budget Decisions flow
+- [ ] **LAND-03**: Visitor can see an inline animated demo preview of the analysis results (campaign cards with action badges) embedded directly on the page without leaving the site
+- [ ] **LAND-04**: Visitor can read a Features section highlighting semantic attribution, CRM webhook sync, n8n automation, and budget routing use cases
+
+### Waitlist
+
+- [ ] **WAIT-01**: Visitor can submit their email address via a waitlist signup form on the landing page and receive a confirmation message
+- [ ] **WAIT-02**: Submitted waitlist emails are stored in a Postgres database with signup timestamp and source
+- [ ] **WAIT-03**: Owner receives an SMTP email notification at info@k-innovative.com for each new waitlist signup, including the submitted email and timestamp
+
+### API Integration
+
+- [x] **API-01**: An authorized client can POST /api/analyze with a JSON payload containing CRM and web analytics session data and receive structured gpt-4o budget action recommendations (X-API-Key header required)
+- [x] **API-02**: Analysis results from POST /api/analyze are persisted in Postgres keyed by campaign ID and timestamp so they can be retrieved later
+- [x] **API-03**: An authorized client can POST /api/webhook/crm with a normalized JSON payload representing CRM lead data to ingest sessions for future analysis (X-API-Key header required)
+- [x] **API-04**: An authorized client can GET /api/campaigns/{campaign_id}/actions to retrieve the latest persisted analysis result for that campaign (X-API-Key header required)
+- [x] **API-05**: Any client can GET /api/health and receive a 200 response with service status and version string (no authentication required)
+
+### Streamlit UI Polish
+
+- [ ] **UI-03**: The Streamlit app displays a branded header with the Performance Plus product name, an icon, and a one-line tagline
+- [ ] **UI-04**: Campaign results are displayed in an improved layout — expandable detail rows or enriched table — that shows reasoning inline without requiring a separate click
+- [ ] **UI-05**: The Streamlit app includes a visible link to the marketing landing page in the header or sidebar
+
+### Infrastructure
+
+- [ ] **INFRA-04**: The Next.js landing page runs in a Docker container deployed on the same VPS as the existing Streamlit app
+- [ ] **INFRA-05**: The FastAPI service runs in a Docker container on the same VPS
+- [ ] **INFRA-06**: Caddy routes incoming traffic so that / serves the Next.js landing page, /api proxies to FastAPI, and /app proxies to the Streamlit container — all on the same domain
+
+## Future Requirements
+
+### User Accounts
+
+- **AUTH-01**: User can register with email and password for a full account
+- **AUTH-02**: User can log in and access a personal dashboard with their analysis history
+- **AUTH-03**: User can reset their password via email link
+
+### Advanced Integrations
+
+- **INTG-01**: App connects directly to HubSpot API to pull CRM notes without CSV upload
+- **INTG-02**: App connects directly to Salesforce API to pull opportunity notes
+- **INTG-03**: App writes budget action decisions back to Meta Ads API
+
+### Advanced Features
+
+- **FEAT-01**: tiktoken preflight check counts tokens before sending to gpt-4o and warns if over limit
+- **FEAT-02**: User can export analysis results as CSV from the Streamlit app
+- **FEAT-03**: Multi-tenant API with per-tenant API keys and usage tracking
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| Full user auth (login/accounts) | Waitlist-only for v2.0; auth adds 2-3 phases of scope |
+| Real Meta/Google Ads API write-back | Post-hackathon; mock JSON payload sufficient for demo |
+| HubSpot/Salesforce direct API pull | Generic webhook covers v2.0; named CRM integrations are v3+ |
+| Mobile app | Web-first strategy |
+| Multi-tenant isolation | Single-tenant API with API key for v2.0 |
+| Stripe/billing | No paid tier yet — waitlist phase only |
+| Redis job queue | Synchronous API calls sufficient for MVP scale |
+
+## Traceability
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| LAND-01 | Phase 7 | Pending |
+| LAND-02 | Phase 7 | Pending |
+| LAND-03 | Phase 7 | Pending |
+| LAND-04 | Phase 7 | Pending |
+| WAIT-01 | Phase 6 | Pending |
+| WAIT-02 | Phase 6 | Pending |
+| WAIT-03 | Phase 6 | Pending |
+| API-01 | Phase 5 | Complete (05-03) |
+| API-02 | Phase 5 | Complete (05-01, 05-03) |
+| API-03 | Phase 5 | Complete (05-01, 05-03) |
+| API-04 | Phase 5 | Complete (05-03) |
+| API-05 | Phase 5 | Complete (05-03) |
+| UI-03 | Phase 7 | Pending |
+| UI-04 | Phase 7 | Pending |
+| UI-05 | Phase 7 | Pending |
+| INFRA-04 | Phase 8 | Pending |
+| INFRA-05 | Phase 8 | Pending |
+| INFRA-06 | Phase 8 | Pending |
+
+**Coverage:**
+- v2.0 requirements: 18 total
+- Mapped to phases: 18
+- Unmapped: 0 ✓
+
+---
+*Requirements defined: 2026-06-01*
+*Last updated: 2026-06-01 — Phase 5 Plan 03 complete; API-01 through API-05 all implemented in api/main.py*
