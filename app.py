@@ -7,9 +7,38 @@ from data import load_demo_data, compute_campaign_agg
 from dotenv import load_dotenv
 import llm
 from llm import run_analysis
-from ui_helpers import build_results_table_html, build_exec_summary_html
+from ui_helpers import _badge_html, _pct_html, build_exec_summary_html
 
 load_dotenv()
+
+BRANDED_HEADER_HTML = """
+<div style="
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0 16px 0;
+  border-bottom: 1px solid #e6e9ef;
+  margin-bottom: 20px;
+  font-family: 'IBM Plex Sans', sans-serif;
+">
+  <div>
+    <span style="font-size: 22px; font-weight: 600; color: #262730;">⚡ Performance Plus</span>
+    <span style="
+      display: block;
+      font-size: 14px;
+      font-weight: 400;
+      color: #808495;
+      margin-top: 2px;
+    ">AI-powered budget decisions from your CRM notes</span>
+  </div>
+  <a href="/" target="_self" style="
+    font-size: 13px;
+    font-weight: 400;
+    color: #808495;
+    text-decoration: none;
+  ">← Back to site</a>
+</div>
+"""
 
 # per D-04, D-05: module-level flag; DEMO_MODE=1 activates offline fixture path
 DEMO_MODE = os.environ.get("DEMO_MODE") == "1"
@@ -57,8 +86,7 @@ with st.sidebar:
 if DEMO_MODE:
     st.info("ℹ️ Running in demo mode — cached results, no live API call")
 
-st.title("Performance Plus")
-st.write("Autonomous Semantic Attribution Engine")
+st.markdown(BRANDED_HEADER_HTML, unsafe_allow_html=True)
 
 st.markdown("**EXPECTED CSV SCHEMAS (FOR REFERENCE)**")
 st.code("session_id, campaign_id, clicks, impressions, cost_usd, conversion_rate", language=None)
