@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 
 class WebSession(BaseModel):
@@ -29,3 +29,7 @@ class CrmWebhookRecord(BaseModel):
     lead_status: str
     projected_value: float
     sales_notes: str
+
+
+class WaitlistRequest(BaseModel):
+    email: EmailStr
