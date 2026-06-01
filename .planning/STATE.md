@@ -1,11 +1,10 @@
 ---
 gsd_state_version: 1.0
 milestone: v2.0
-milestone_name: — SaaS Foundation
-status: complete
-stopped_at: Phase 8 verified — v2.0 milestone complete
+milestone_name: SaaS Foundation
+status: archived
 last_updated: "2026-06-01"
-last_activity: "2026-06-01 — Phase 8 verified (7/7 passed): landing/Dockerfile + compose.yaml + Caddyfile — all three services routed via Caddy on agent.rukesh.in"
+last_activity: "2026-06-01 — v2.0 SaaS Foundation milestone archived. All 8 phases complete across 3 milestones. Run /gsd:new-milestone to start v3.0."
 progress:
   total_phases: 4
   completed_phases: 4
@@ -18,17 +17,16 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-06-01 for v2.0 milestone)
+See: .planning/PROJECT.md (updated 2026-06-01 after v2.0 milestone)
 
 **Core value:** A marketer can load demo data and instantly get AI-reasoned budget routing decisions based on what sales reps said about each lead — not just what the click data shows.
-**Current focus:** Phase 8 — Infrastructure Update (Docker compose + Caddy routing for Next.js + FastAPI + Streamlit)
+**Current focus:** v2.0 archived — run `/gsd:new-milestone` to start v3.0 planning.
 
 ## Current Position
 
-Phase: 8 — Infrastructure Update
-Plan: 08-03 complete — Phase 8 COMPLETE (3/3 plans)
-Status: Phase 8 complete — all plans executed
-Last activity: 2026-06-01 — Phase 8 Plan 03 executed: Caddyfile multi-route block — handle /api/* → fastapi:8000, handle_path /app* → app:8501, handle catch-all → landing:3000 (INFRA-06)
+Milestone: v2.0 — SaaS Foundation — ARCHIVED 2026-06-01
+Status: All 3 milestones complete (v1.0-design, v1.0, v2.0). All 8 phases shipped.
+Last activity: 2026-06-01 — v2.0 milestone archived. 18/18 requirements satisfied. git tag v2.0 created.
 
 ## Performance Metrics
 
@@ -189,6 +187,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-06-01
-Stopped at: Phase 8 Plan 03 complete — Caddyfile multi-route block committed (cf5f7fe). Phase 8 COMPLETE.
-Resume file: None — milestone v2.0 complete
+Last session: 2026-06-01T14:40:10.198Z
+Stopped at: context exhaustion at 75% (2026-06-01)
+Resume file: None
