@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: — SaaS Foundation
-status: ready
-stopped_at: Phase 8 planned — ready to execute (3 plans, 2 waves)
+status: in-progress
+stopped_at: Phase 8 Plan 01 complete — ready for Plan 02 (compose.yaml orchestration)
 last_updated: "2026-06-01"
-last_activity: 2026-06-01 — Phase 8 planned (3 plans across 2 waves): landing/Dockerfile + next.config.ts + compose.yaml + Caddyfile
+last_activity: 2026-06-01 — Phase 8 Plan 01 executed: landing/Dockerfile + .dockerignore + next.config.ts standalone output
 progress:
   total_phases: 4
   completed_phases: 3
   total_plans: 13
-  completed_plans: 10
-  percent: 75
+  completed_plans: 11
+  percent: 85
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-01 for v2.0 milestone)
 ## Current Position
 
 Phase: 8 — Infrastructure Update
-Plan: Ready to execute — 3 plans (08-01, 08-02, 08-03) across 2 waves
-Status: Planned — verification passed (3/3 requirements, 11/11 decisions covered)
-Last activity: 2026-06-01 — Phase 8 planned (3 plans: landing/Dockerfile, compose.yaml update, Caddyfile multi-route)
+Plan: 08-01 complete — next: 08-02 (compose.yaml orchestration, Wave 2)
+Status: In progress — 1/3 plans complete
+Last activity: 2026-06-01 — Phase 8 Plan 01 executed: landing/next.config.ts + landing/.dockerignore + landing/Dockerfile (INFRA-04)
 
 ## Performance Metrics
 
@@ -53,11 +53,12 @@ Last activity: 2026-06-01 — Phase 8 planned (3 plans: landing/Dockerfile, comp
 | 06-waitlist-backend (plan 02) | 1 | ~2 min | ~2 min |
 | 07-landing-page-ui-polish (plan 01) | 1 | 2 min | 2 min |
 | 07-landing-page-ui-polish (plan 02) | 1 | ~22 min | ~22 min |
+| 08-infrastructure-update (plan 01) | 1 | 2 min | 2 min |
 
 **Recent Trend:**
 
-- Last 3 plans: 03-01 (~5 min), 03-02 (~5 min), 03-03 (~5 min)
-- Trend: stable — ~5 min/plan for code phases
+- Last 3 plans: 07-02 (~22 min), 07-04 (~5 min), 08-01 (~2 min)
+- Trend: infrastructure config plans faster than code plans (~2 min vs ~5 min)
 
 *Updated after each plan completion.*
 
@@ -147,6 +148,13 @@ Phase 6 Plan 02 decisions:
 - SMTP exceptions wrapped as HTTPException(500) with "SMTP error:" prefix — fail loudly (D-06)
 - Tests patch at api.main.insert_waitlist_email / api.main.send_waitlist_notification binding level (Pitfall 5 — from api.db import creates local binding)
 
+Phase 8 Plan 01 decisions:
+
+- npm ci (no --omit=dev) in builder stage: TypeScript compiler and Tailwind PostCSS are devDependencies needed at build time; standalone copy ensures devDeps never reach runtime image
+- HEALTHCHECK omitted from landing/Dockerfile: caddy depends_on for landing has no condition: service_healthy per D-10; adds complexity for no functional benefit in Phase 8
+- .env* glob (not bare .env): .env.local contains NEXT_PUBLIC_API_BASE_URL=http://localhost:8000; Next.js reads .env.local at build time; bare .env would not exclude .env.local (Pitfall 4)
+- Alpine addgroup/adduser syntax used (not Debian groupadd/useradd): node:20-alpine uses BusyBox; Debian syntax causes sh: useradd: not found (Pitfall 1)
+
 ### Pending Todos
 
 None.
@@ -166,5 +174,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-06-01
-Stopped at: Phase 8 context gathered — ready to plan
-Resume file: .planning/phases/08-infrastructure-update/08-CONTEXT.md
+Stopped at: Phase 8 Plan 01 complete — landing/Dockerfile + .dockerignore + next.config.ts committed (55cc8de)
+Resume file: .planning/phases/08-infrastructure-update/08-02-PLAN.md

@@ -115,7 +115,7 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
   3. A browser request to /app serves the Streamlit app with WebSocket connections maintained (no blank UI).
 **Plans:** 3 plans
   **Wave 1** *(parallel — no dependencies)*
-  - [ ] 08-01-PLAN.md — Next.js standalone build (INFRA-04): `landing/next.config.ts` adds `output: 'standalone'`, new `landing/.dockerignore` with `.env*` glob (Pitfall 4 guard), new `landing/Dockerfile` (node:20-alpine multi-stage with Alpine `addgroup`/`adduser` for UID 1001 appuser, exact public→standalone→static COPY order)
+  - [x] 08-01-PLAN.md — Next.js standalone build (INFRA-04): `landing/next.config.ts` adds `output: 'standalone'`, new `landing/.dockerignore` with `.env*` glob (Pitfall 4 guard), new `landing/Dockerfile` (node:20-alpine multi-stage with Alpine `addgroup`/`adduser` for UID 1001 appuser, exact public→standalone→static COPY order)
   **Wave 2** *(blocked on 08-01)*
   - [ ] 08-02-PLAN.md — Compose orchestration (INFRA-04, INFRA-05): `compose.yaml` adds `landing` service (no ports, no env_file), `postgres` healthcheck via `pg_isready`, `fastapi` depends_on dict form with `condition: service_healthy` (Pitfall 6), `caddy` depends_on list extended to `[app, fastapi, landing]`
   - [ ] 08-03-PLAN.md — Caddy multi-route (INFRA-06): `caddy/Caddyfile` replaced with three-handler block — `handle /api/*` → fastapi:8000 (prefix preserved), `handle_path /app*` → app:8501 (prefix stripped, glob `/app*` not `/app/*` per Pitfall 2), `handle` catch-all → landing:3000
@@ -140,8 +140,8 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
 | 5. FastAPI Service | v2.0 | 4/4 | ✅ Complete | 2026-06-01 |
 | 6. Waitlist Backend | v2.0 | 2/2 | ✅ Complete | 2026-06-01 |
 | 7. Landing Page & UI Polish | v2.0 | 4/4 | ✅ Complete | 2026-06-01 |
-| 8. Infrastructure Update | v2.0 | 0/3 | Ready to execute | - |
+| 8. Infrastructure Update | v2.0 | 1/3 | In progress | - |
 
 ---
 *Roadmap created: 2026-05-26*
-*Last updated: 2026-06-01 — Phase 8 planned (3 plans across 2 waves): landing/Dockerfile + .dockerignore + next.config.ts (Wave 1) → compose.yaml orchestration + caddy/Caddyfile multi-route (Wave 2 parallel)*
+*Last updated: 2026-06-01 — Phase 8 Plan 01 complete (1/3): landing/Dockerfile + .dockerignore + next.config.ts (INFRA-04). Wave 2 next: compose.yaml orchestration + caddy/Caddyfile multi-route*
