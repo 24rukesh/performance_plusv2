@@ -1,6 +1,8 @@
 services:
   app:
-    build: .
+    build:
+      context: .
+      target: streamlit
     restart: unless-stopped
     env_file: .env
     networks:
@@ -22,6 +24,29 @@ services:
     depends_on:
       - app
 
+  fastapi:
+    build:
+      context: .
+      target: api
+    restart: unless-stopped
+    env_file: .env
+    networks:
+      - internal
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: performance_plus
+      POSTGRES_USER: ppuser
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal
+
 networks:
   internal:
     driver: bridge
@@ -29,3 +54,4 @@ networks:
 volumes:
   caddy_data:
   caddy_config:
+  postgres_data:
