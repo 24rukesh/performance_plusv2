@@ -4,14 +4,14 @@ milestone: v2.0
 milestone_name: SaaS Foundation
 status: planning
 stopped_at: —
-last_updated: "2026-06-01T11:30:00.000Z"
-last_activity: 2026-06-01 — Phase 5 Plan 03 complete; api/main.py with 5 endpoints, lifespan, and api-key auth
+last_updated: "2026-06-01T06:15:16.000Z"
+last_activity: 2026-06-01 — Phase 5 Plan 04 complete; 14 TestClient contract tests for all 5 API endpoints
 progress:
   total_phases: 4
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 4
-  completed_plans: 3
-  percent: 75
+  completed_plans: 4
+  percent: 100
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-01 for v2.0 milestone)
 ## Current Position
 
 Phase: 5 — FastAPI Service
-Plan: 03 complete — Phase 5 done
-Status: Phase 5 complete — all 3 plans done; api/ package, Dockerfile, compose.yaml, and main.py all implemented
-Last activity: 2026-06-01 — Phase 5 Plan 03 complete (1 task, 1 commit)
+Plan: 04 complete — Phase 5 fully complete
+Status: Phase 5 complete — all 4 plans done; api/ package, Dockerfile, compose.yaml, main.py, and contract tests all implemented
+Last activity: 2026-06-01 — Phase 5 Plan 04 complete (1 task, 1 commit — 14 TestClient contract tests)
 
 ## Performance Metrics
 
@@ -48,6 +48,7 @@ Last activity: 2026-06-01 — Phase 5 Plan 03 complete (1 task, 1 commit)
 | 05-fastapi-service (plan 01) | 1 | ~3 min | ~3 min |
 | 05-fastapi-service (plan 02) | 1 | ~5 min | ~5 min |
 | 05-fastapi-service (plan 03) | 1 | ~5 min | ~5 min |
+| 05-fastapi-service (plan 04) | 1 | ~3 min | ~3 min |
 
 **Recent Trend:**
 
@@ -106,6 +107,12 @@ Phase 5 Plan 03 decisions:
 - No tenacity retry in main.py — llm.py already wraps run_analysis with tenacity (no double-retry)
 - No CORS middleware — handled by Caddy reverse proxy at deployment (Phase 8)
 
+Phase 5 Plan 04 decisions:
+
+- Happy path test also mocks insert_analysis_result — required since no DATABASE_URL in CI
+- Patch api.main.insert_analysis_result (not api.db) because 'from api.db import' creates local binding
+- _make_client helper defers app import until after all monkeypatches are applied
+
 ### Pending Todos
 
 None.
@@ -124,6 +131,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-06-01T11:30:00Z
-Stopped at: Completed 05-03-PLAN.md (api/main.py with 5 endpoints, lifespan, and api-key auth — 1 task, 1 commit)
+Last session: 2026-06-01T06:15:16Z
+Stopped at: Completed 05-04-PLAN.md (14 TestClient contract tests for all 5 API endpoints — 1 task, 1 commit)
 Resume file: None

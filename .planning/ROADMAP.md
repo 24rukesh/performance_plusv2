@@ -34,7 +34,7 @@ See archive: `.planning/milestones/v1.0-design-ROADMAP.md`
 
 Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS product with an API layer, waitlist backend, marketing site, and unified VPS deployment.
 
-- [ ] **Phase 5: FastAPI Service** — Python FastAPI with five API endpoints, Postgres for result persistence, API key auth
+- [x] **Phase 5: FastAPI Service** — Python FastAPI with five API endpoints, Postgres for result persistence, API key auth
 - [ ] **Phase 6: Waitlist Backend** — Waitlist Postgres table, POST /api/waitlist endpoint, SMTP email notification on signup
 - [ ] **Phase 7: Landing Page & UI Polish** — Next.js marketing site (hero, How It Works, animated demo, features, waitlist form) plus Streamlit branded header and improved results layout
 - [ ] **Phase 8: Infrastructure Update** — Docker compose adds Next.js + FastAPI services, Caddy routes all three apps on one domain
@@ -58,7 +58,7 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
   **Wave 2** *(blocked on Wave 1 completion)*
   - [x] 05-03-PLAN.md — api/main.py: FastAPI app, lifespan(init_db), verify_api_key dependency, all 5 endpoints
   **Wave 3** *(blocked on Wave 2 completion)*
-  - [ ] 05-04-PLAN.md — tests/test_api.py: pytest + TestClient contract tests for all 5 endpoints + auth + persistence
+  - [x] 05-04-PLAN.md — tests/test_api.py: pytest + TestClient contract tests for all 5 endpoints + auth + persistence
 
   **Cross-cutting constraints:**
   - psycopg2 raw parameterized SQL — no ORM, no SQLAlchemy (D-09)
@@ -108,11 +108,11 @@ Four vertical slices that evolve the hackathon MVP into a publicly marketed SaaS
 | 2. Demo Data Foundation | v1.0 | 3/3 | ✅ Complete | 2026-05-29 |
 | 3. AI Analysis & Results Display | v1.0 | 3/3 | ✅ Complete | 2026-05-30 |
 | 4. Deploy & Ship | v1.0 | 3/3 | ✅ Complete | 2026-05-30 |
-| 5. FastAPI Service | v2.0 | 3/4 | In progress | - |
+| 5. FastAPI Service | v2.0 | 4/4 | ✅ Complete | 2026-06-01 |
 | 6. Waitlist Backend | v2.0 | 0/? | Not started | - |
 | 7. Landing Page & UI Polish | v2.0 | 0/? | Not started | - |
 | 8. Infrastructure Update | v2.0 | 0/? | Not started | - |
 
 ---
 *Roadmap created: 2026-05-26*
-*Last updated: 2026-06-01 — Phase 5 Plan 03 complete (api/main.py with 5 endpoints, lifespan, and api-key auth)*
+*Last updated: 2026-06-01 — Phase 5 Plan 04 complete (14 TestClient contract tests — Phase 5 fully complete)*
