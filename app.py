@@ -7,7 +7,7 @@ from openai import OpenAI
 from data import compute_campaign_agg
 from dotenv import load_dotenv
 import llm
-from llm import run_analysis
+from llm import run_analysis, count_prompt_tokens
 from ui_helpers import _badge_html, _pct_html, build_exec_summary_html
 from ingest import SUPPORTED_CURRENCIES, REQUIRED_CRM_FIELDS, auto_suggest_crm_columns, ingest
 
@@ -133,6 +133,8 @@ _state_defaults = {
     "crm_field_map": None,
     "reporting_currency": "INR",
     "demo_mode_active": False,
+    # Phase 10 addition:
+    "token_warning_confirmed": False,
 }
 for k, v in _state_defaults.items():
     if k not in st.session_state:
@@ -356,19 +358,6 @@ if _gate_ready:
             )
             st.stop()
 
-        # Phase 9 bridge: sum source-prefixed numeric columns into unprefixed names
-        # so compute_campaign_agg (which reads "clicks", "impressions", "conversion_rate")
-        # works until Phase 10 extends it to handle source-prefixed columns natively.
-        _clicks_cols = [c for c in _merged_df.columns if c.endswith("_clicks")]
-        _impr_cols = [c for c in _merged_df.columns if c.endswith("_impressions")]
-        _conv_cols = [c for c in _merged_df.columns if c.endswith("_conversion_rate")]
-        if _clicks_cols and "clicks" not in _merged_df.columns:
-            _merged_df["clicks"] = _merged_df[_clicks_cols].sum(axis=1, skipna=True)
-        if _impr_cols and "impressions" not in _merged_df.columns:
-            _merged_df["impressions"] = _merged_df[_impr_cols].sum(axis=1, skipna=True)
-        if _conv_cols and "conversion_rate" not in _merged_df.columns:
-            _merged_df["conversion_rate"] = _merged_df[_conv_cols].mean(axis=1, skipna=True)
-
         st.session_state["merged_df"] = _merged_df
         st.session_state["campaign_agg"] = compute_campaign_agg(_merged_df)
 
@@ -399,22 +388,39 @@ if st.session_state["merged_df"] is not None:
         demo_ready = (DEMO_MODE or st.session_state.get("demo_mode_active", False)) and llm.client is None
         if llm.client is None and not demo_ready:
             st.info("Enter your OpenAI API key in the sidebar to enable Run Analysis.")
-        elif st.button("Run Analysis", type="primary"):
-            error_occurred = False
-            with st.status("Analysing campaigns...", expanded=True) as status:
-                status.write("Loading demo analysis..." if demo_ready else "Calling gpt-4o...")
-                try:
-                    result = llm._load_fixture() if demo_ready else run_analysis(st.session_state["campaign_agg"])
-                except Exception:
-                    status.update(label="Analysis failed", state="error")
-                    error_occurred = True
-                if not error_occurred:
-                    status.write("Structuring output...")
-                    st.session_state["analysis_result"] = result
-                    status.update(label="Done ✓", state="complete", expanded=False)
-            if error_occurred:
-                st.error("Analysis failed. Check your OPENAI_API_KEY or retry.")
-                st.stop()
+        else:
+            # Token gate (Phase 10 D-16)
+            _token_count = count_prompt_tokens(st.session_state["campaign_agg"])
+            _show_run_analysis = True
+            if _token_count >= 60_000:
+                if not st.session_state.get("token_warning_confirmed", False):
+                    st.warning(
+                        f"Your payload is {_token_count:,} tokens — approaching the 128k context "
+                        "window. This may affect analysis quality."
+                    )
+                    if st.button("Continue anyway", key="token_confirm_btn"):
+                        st.session_state["token_warning_confirmed"] = True
+                        st.rerun()
+                    _show_run_analysis = False
+                # else: user confirmed — _show_run_analysis stays True
+
+            if _show_run_analysis:
+                if st.button("Run Analysis", type="primary"):
+                    error_occurred = False
+                    with st.status("Analysing campaigns...", expanded=True) as status:
+                        status.write("Loading demo analysis..." if demo_ready else "Calling gpt-4o...")
+                        try:
+                            result = llm._load_fixture() if demo_ready else run_analysis(st.session_state["campaign_agg"])
+                        except Exception:
+                            status.update(label="Analysis failed", state="error")
+                            error_occurred = True
+                        if not error_occurred:
+                            status.write("Structuring output...")
+                            st.session_state["analysis_result"] = result
+                            status.update(label="Done ✓", state="complete", expanded=False)
+                    if error_occurred:
+                        st.error("Analysis failed. Check your OPENAI_API_KEY or retry.")
+                        st.stop()
 
         if st.session_state["analysis_result"] is None:
             st.caption("Click 'Run Analysis' to send aggregated campaign data to gpt-4o for budget recommendations.")
