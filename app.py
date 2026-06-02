@@ -356,6 +356,19 @@ if _gate_ready:
             )
             st.stop()
 
+        # Phase 9 bridge: sum source-prefixed numeric columns into unprefixed names
+        # so compute_campaign_agg (which reads "clicks", "impressions", "conversion_rate")
+        # works until Phase 10 extends it to handle source-prefixed columns natively.
+        _clicks_cols = [c for c in _merged_df.columns if c.endswith("_clicks")]
+        _impr_cols = [c for c in _merged_df.columns if c.endswith("_impressions")]
+        _conv_cols = [c for c in _merged_df.columns if c.endswith("_conversion_rate")]
+        if _clicks_cols and "clicks" not in _merged_df.columns:
+            _merged_df["clicks"] = _merged_df[_clicks_cols].sum(axis=1, skipna=True)
+        if _impr_cols and "impressions" not in _merged_df.columns:
+            _merged_df["impressions"] = _merged_df[_impr_cols].sum(axis=1, skipna=True)
+        if _conv_cols and "conversion_rate" not in _merged_df.columns:
+            _merged_df["conversion_rate"] = _merged_df[_conv_cols].mean(axis=1, skipna=True)
+
         st.session_state["merged_df"] = _merged_df
         st.session_state["campaign_agg"] = compute_campaign_agg(_merged_df)
 
