@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: — Advanced Analytics & Multi-Source
-status: planned
-stopped_at: Phase 10 planned (2026-06-02)
-last_updated: "2026-06-02"
-last_activity: "2026-06-02 — Phase 10 planned: 4 plans in 2 waves (tiktoken o200k_base, per-platform pivot, source_platforms schema, token gate UI)"
+status: Executing — Phase 10 Plan 01 complete
+stopped_at: None
+last_updated: "2026-06-02T06:13:48Z"
+last_activity: "2026-06-02 — Phase 10 Plan 01 complete: ingest.py crm_ pass-through + data.py multi-source compute_campaign_agg; 35 tests pass"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 8
-  completed_plans: 4
-  percent: 25
+  completed_plans: 5
+  percent: 31
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-01 after v2.0 milestone)
 ## Current Position
 
 Phase: 10 of 12 (Richer LLM Analysis)
-Plan: 4 plans in 2 waves — ready to execute
-Status: Planned — Phase 10 ready for execution
-Last activity: 2026-06-02 — Phase 10 planned: 4 plans (ingest+data, llm, app, tests) in 2 waves, verification passed
+Plan: 10-01 complete; 10-02 (llm.py) is next
+Status: Executing — Phase 10 Plan 01 complete
+Last activity: 2026-06-02 — Phase 10 Plan 01 complete: ingest.py crm_ pass-through + data.py multi-source compute_campaign_agg; 35 tests pass
 
 Progress: [██░░░░░░░░] 25% (v3.0 milestone, Phase 9 of 4 phases complete)
 
@@ -67,6 +67,12 @@ v3.0 execution decisions (09-01):
 - Source-prefix applied BEFORE pd.concat, not after — prevents ambiguity when same column name in multiple platforms
 - Phase 9 D-07 extra CRM column pass-through deferred to Phase 10
 
+v3.0 execution decisions (10-01):
+
+- SLUG_TO_DISPLAY constant added to data.py to avoid .title() mismatch for linkedin_ads (yields "Linkedin Ads" not "LinkedIn Ads")
+- compute_campaign_agg preserves backward compat: legacy path unchanged except source_platforms="" added
+- merged_df copied once when crm_extra present; separate copy for multi-source synthesis if no crm_extra
+
 v3.0 execution decisions (09-02):
 
 - sess_013 added to _META_ADS_ROWS to satisfy >=2 multi-platform session_id fan-out assertion (was only sess_010 initially)
@@ -75,7 +81,9 @@ v3.0 execution decisions (09-02):
 
 ### Pending Todos
 
-- Phase 10 planned with 4 PLAN.md files: 10-01 (ingest.py CRM pass-through + data.py multi-source agg), 10-02 (llm.py schema + prompt + tiktoken helper), 10-03 (app.py bridge removal + token gate), 10-04 (tests). Ready to execute.
+- Phase 10 Plan 01 complete (2026-06-02). Commits: 7462345, c31b532.
+- Phase 10 Plan 02 next: llm.py schema (source_platforms field) + SYSTEM_PROMPT bullets + count_prompt_tokens tiktoken helper.
+- Phase 10 planned with 4 PLAN.md files: 10-01 (DONE), 10-02 (llm.py schema + prompt + tiktoken helper), 10-03 (app.py bridge removal + token gate), 10-04 (tests).
 - CRITICAL: tiktoken encoding for gpt-4o is o200k_base (not cl100k_base) — plans updated, but verify during execution.
 - Phase 9 bridge block in app.py (commit 5bbdc71, lines ~362–371) is deleted in Plan 10-03 Task 1.
 
@@ -93,6 +101,6 @@ v3.0 execution decisions (09-02):
 
 ## Session Continuity
 
-Last session: 2026-06-02T04:50:02.259Z
-Stopped at: context exhaustion at 75% (2026-06-02)
+Last session: 2026-06-02T06:13:48Z
+Stopped at: None — Plan 01 complete, context pressure; run /gsd:execute-phase for 10-02
 Resume file: None

@@ -79,7 +79,7 @@ Plans:
   3. When the aggregated payload approaches 60k tokens, the user sees a warning before the gpt-4o call is made — preventing silent context window overflow
 **Plans**: 4 plans
 Plans:
-- [ ] 10-01-PLAN.md — ingest.py CRM extra column pass-through (D-06) + data.py compute_campaign_agg multi-source extension with per-platform pivot, source_platforms column, and crm_ enrichment (D-01 to D-05)
+- [x] 10-01-PLAN.md — ingest.py CRM extra column pass-through (D-06) + data.py compute_campaign_agg multi-source extension with per-platform pivot, source_platforms column, and crm_ enrichment (D-01 to D-05) (commits 7462345, c31b532, 2026-06-02)
 - [ ] 10-02-PLAN.md — llm.py: source_platforms field in CampaignAction (D-07), SYSTEM_PROMPT cross-platform + echo rules (D-09 to D-11), count_prompt_tokens helper with o200k_base (D-12 override), fixture_results.json update, tiktoken install
 - [ ] 10-03-PLAN.md — app.py: delete Phase 9 bridge block (D-04), add token_warning_confirmed state key, add token gate UI with st.warning + Continue anyway + st.rerun pattern (D-16)
 - [ ] 10-04-PLAN.md — tests/test_data.py: multi-source breakdown + source_platforms assertions; tests/test_llm.py: schema required[], count_prompt_tokens, SYSTEM_PROMPT rule tests
@@ -124,10 +124,10 @@ Phases execute in numeric order: 9 → 10 → 11 → 12
 | 7. Landing Page & UI Polish | v2.0 | 4/4 | ✅ Complete | 2026-06-01 |
 | 8. Infrastructure Update | v2.0 | 3/3 | ✅ Complete | 2026-06-01 |
 | 9. Multi-Source Ingestion | v3.0 | 1/4 | In progress | - |
-| 10. Richer LLM Analysis | v3.0 | 0/4 | 🗂 Planned | - |
+| 10. Richer LLM Analysis | v3.0 | 1/4 | In progress | - |
 | 11. Charts, Filters & Export | v3.0 | 0/TBD | Not started | - |
 | 12. Analysis Persistence | v3.0 | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-05-26*
-*Last updated: 2026-06-02 — Phase 10 planned: 4 plans in 2 waves covering AGENT-01, AGENT-02, AGENT-03*
+*Last updated: 2026-06-02 — Phase 10 Plan 01 complete: ingest.py crm_ pass-through + data.py multi-source compute_campaign_agg; 35 tests pass*
