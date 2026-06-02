@@ -395,16 +395,16 @@ if st.session_state["merged_df"] is not None:
     st.dataframe(merged_df, use_container_width=True, hide_index=True)
 
     if st.session_state["campaign_agg"] is not None:
-        # per D-11: DEMO_MODE with no key is allowed; key presence takes precedence over fixture
-        demo_ready = DEMO_MODE and llm.client is None
+        # demo_ready: env DEMO_MODE=1 OR sidebar "Load Demo Data" used — both serve fixture without a key
+        demo_ready = (DEMO_MODE or st.session_state.get("demo_mode_active", False)) and llm.client is None
         if llm.client is None and not demo_ready:
             st.info("Enter your OpenAI API key in the sidebar to enable Run Analysis.")
         elif st.button("Run Analysis", type="primary"):
             error_occurred = False
             with st.status("Analysing campaigns...", expanded=True) as status:
-                status.write("Calling gpt-4o...")
+                status.write("Loading demo analysis..." if demo_ready else "Calling gpt-4o...")
                 try:
-                    result = run_analysis(st.session_state["campaign_agg"])
+                    result = llm._load_fixture() if demo_ready else run_analysis(st.session_state["campaign_agg"])
                 except Exception:
                     status.update(label="Analysis failed", state="error")
                     error_occurred = True
