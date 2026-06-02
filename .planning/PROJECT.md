@@ -31,7 +31,7 @@ A marketer can load demo data and instantly get AI-reasoned budget routing decis
 
 ### Active
 
-(None — v2.0 milestone complete. New requirements defined in next milestone via `/gsd:new-milestone`.)
+Requirements for v3.0 are defined in `.planning/REQUIREMENTS.md`.
 
 ### Out of Scope
 
@@ -86,6 +86,16 @@ A marketer can load demo data and instantly get AI-reasoned budget routing decis
 | Postgres pg_isready healthcheck + service_healthy condition | Eliminates FastAPI init_db() startup race on cold compose up | ✓ Good — no connection errors at cold start |
 | .env* glob in landing/.dockerignore | Prevents .env.local NEXT_PUBLIC_ value from baking into production JS bundle | ✓ Good — production URL is clean relative path |
 
+## Current Milestone: v3.0 Advanced Analytics & Multi-Source
+
+**Goal:** Transform the single-CSV demo tool into a multi-source analytics platform where marketers upload data from any ads platform + their CRM, get richer AI analysis across sources and currencies, and can save, print, and explore results interactively.
+
+**Target features:**
+- Multi-source data ingestion (Google Ads, Meta Ads, LinkedIn, custom) with per-upload currency selection and CRM field mapping UI
+- Richer agent logic: cross-source/cross-campaign analysis, better prompt engineering with multi-source context
+- Dynamic views: charts, filter/sort, side-by-side comparison, session drill-down
+- Analysis management: save to Postgres, print/export report, reload saved analyses
+
 ## Evolution
 
 This document evolves at phase transitions and milestone boundaries.
@@ -97,4 +107,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Current State with shipped version
 
 ---
-*Last updated: 2026-06-01 after v2.0 — SaaS Foundation milestone*
+*Last updated: 2026-06-01 — v3.0 Advanced Analytics & Multi-Source milestone started*
