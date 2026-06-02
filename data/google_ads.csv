@@ -1,0 +1,9 @@
+session_id,campaign_id,clicks,impressions,cost_local,conversion_rate
+sess_001,cmp_b2b_search,142,4800,87.5,0.031
+sess_002,cmp_competitor_conquest,38,2100,42.0,0.078
+sess_003,cmp_b2b_search,118,5100,92.0,0.028
+sess_004,cmp_competitor_conquest,44,1900,38.5,0.084
+sess_005,cmp_b2b_search,156,5300,101.0,0.033
+sess_006,cmp_competitor_conquest,52,2400,48.0,0.091
+sess_007,cmp_b2b_search,131,4600,84.0,0.029
+sess_008,cmp_competitor_conquest,29,1700,35.0,0.071

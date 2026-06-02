@@ -1,0 +1,7 @@
+session_id,campaign_id,clicks,impressions,cost_local,conversion_rate
+sess_010,cmp_retargeting,87,3200,60.19,0.042
+sess_011,cmp_retargeting,74,2900,53.7,0.038
+sess_012,cmp_retargeting,93,3400,65.74,0.049
+sess_013,cmp_retargeting,61,2700,49.54,0.035
+sess_017,cmp_brand_awareness,210,7800,134.26,0.008
+sess_018,cmp_brand_awareness,187,7100,122.22,0.009

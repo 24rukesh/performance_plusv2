@@ -1,0 +1,4 @@
+session_id,campaign_id,clicks,impressions,cost_local,conversion_rate
+sess_014,cmp_linkedin_outbound,45,3800,75.4,0.018
+sess_015,cmp_linkedin_outbound,38,3500,69.84,0.015
+sess_016,cmp_linkedin_outbound,51,4100,80.95,0.021
