@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import time
+import tiktoken
 from pathlib import Path
 from typing import Literal
 
@@ -42,11 +43,18 @@ class CampaignAction(BaseModel):
     evidence_count: int = Field(
         description="Echo session_count from input. Do not hallucinate."
     )
+    source_platforms: list[str] = Field(
+        description=(
+            "Echo source_platforms from input data exactly. "
+            "List the platform display names (e.g. ['Google Ads', 'Meta Ads']) "
+            "that contributed sessions to this campaign."
+        )
+    )
 
 
 class AnalysisResult(BaseModel):
     executive_summary: str = Field(
-        description="2-3 sentence summary of portfolio health and the single most important action."
+        description="2-3 sentence summary of portfolio health, the single most important action, and which platform is delivering best lead quality per dollar across the portfolio."
     )
     campaigns: list[CampaignAction] = Field(
         description="One CampaignAction per campaign in the input CSV. All campaigns must be included."
@@ -65,7 +73,21 @@ Rules:
 - evidence_count: echo the session_count column from the input data exactly. Do not invent a number.
 - semantic_reasoning: one sentence citing specific language from the sales notes.
 - confidence: 0.0–1.0 reflecting how consistent the qualitative signal is across sessions.
-- Do not hedge. Make a call for every campaign."""
+- Do not hedge. Make a call for every campaign.
+- Cross-platform: when source_platforms lists multiple platforms, compare lead quality per dollar (use {platform}_cost_usd and {platform}_session_count breakdown columns) in semantic_reasoning. Name which platform performs best for this campaign.
+- source_platforms: echo the source_platforms value from the input data exactly. Do not invent platform names."""
+
+
+def count_prompt_tokens(campaign_agg: pd.DataFrame) -> int:
+    """Count tokens for system prompt + user message CSV payload.
+
+    Uses o200k_base encoding — the correct encoding for gpt-4o-2024-08-06.
+    Mirrors the exact message format in _call_llm() so the count is accurate.
+    """
+    enc = tiktoken.get_encoding("o200k_base")
+    csv_text = campaign_agg.to_csv(index=False)
+    user_msg = f"Analyse these campaigns and return your budget decisions:\n\n{csv_text}"
+    return len(enc.encode(SYSTEM_PROMPT)) + len(enc.encode(user_msg))
 
 
 @retry(

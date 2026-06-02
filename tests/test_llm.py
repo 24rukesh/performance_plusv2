@@ -3,7 +3,7 @@ import pandas as pd
 from unittest.mock import MagicMock, patch
 from pydantic import ValidationError
 import llm
-from llm import run_analysis, CampaignAction, AnalysisResult
+from llm import run_analysis, CampaignAction, AnalysisResult, count_prompt_tokens, SYSTEM_PROMPT
 
 
 def _minimal_agg_df():
@@ -30,6 +30,7 @@ def _make_valid_analysis_result():
                 semantic_reasoning="Reps flagged 'wrong ICP' across all sessions.",
                 confidence=0.95,
                 evidence_count=3,
+                source_platforms=["Google Ads"],
             ),
         ],
     )
@@ -87,6 +88,7 @@ def test_budget_action_rejects_invalid_literal():
             semantic_reasoning="test",
             confidence=0.5,
             evidence_count=1,
+            source_platforms=[],
         )
 
 
@@ -99,6 +101,7 @@ def test_confidence_rejects_out_of_range():
             semantic_reasoning="test",
             confidence=1.5,
             evidence_count=1,
+            source_platforms=[],
         )
     with pytest.raises(ValidationError):
         CampaignAction(
@@ -108,6 +111,7 @@ def test_confidence_rejects_out_of_range():
             semantic_reasoning="test",
             confidence=-0.1,
             evidence_count=1,
+            source_platforms=[],
         )
 
 
@@ -119,6 +123,7 @@ def test_campaign_action_schema_valid():
         semantic_reasoning="Reps flagged budget too small.",
         confidence=0.9,
         evidence_count=6,
+        source_platforms=["Google Ads", "Meta Ads"],
     )
     data = ca.model_dump()
     assert data["campaign_id"] == "cmp_x"
@@ -127,6 +132,8 @@ def test_campaign_action_schema_valid():
     assert data["semantic_reasoning"] == "Reps flagged budget too small."
     assert data["confidence"] == 0.9
     assert data["evidence_count"] == 6
+    assert data["source_platforms"] == ["Google Ads", "Meta Ads"]
+    assert isinstance(data["source_platforms"], list)
     assert isinstance(data["campaign_id"], str)
     assert isinstance(data["budget_action"], str)
     assert isinstance(data["percentage_change"], int)
@@ -178,3 +185,28 @@ def test_fixture_schema():
     result = llm._load_fixture()
     assert isinstance(result, AnalysisResult)
     assert len(result.campaigns) == 5
+
+
+def test_source_platforms_in_schema_required():
+    schema = CampaignAction.model_json_schema()
+    assert "source_platforms" in schema.get("required", [])
+    assert schema["properties"]["source_platforms"]["type"] == "array"
+    assert schema["properties"]["source_platforms"]["items"]["type"] == "string"
+
+
+def test_count_prompt_tokens_returns_int():
+    agg_df = _minimal_agg_df()
+    count = count_prompt_tokens(agg_df)
+    assert isinstance(count, int)
+    assert count > 0
+
+
+def test_count_prompt_tokens_scales_with_data():
+    small_df = _minimal_agg_df()
+    large_df = pd.concat([_minimal_agg_df()] * 10, ignore_index=True)
+    assert count_prompt_tokens(large_df) > count_prompt_tokens(small_df)
+
+
+def test_system_prompt_contains_cross_platform_rule():
+    assert "Cross-platform" in SYSTEM_PROMPT
+    assert "source_platforms" in SYSTEM_PROMPT
