@@ -4,14 +4,14 @@ milestone: v3.0
 milestone_name: Advanced Analytics & Multi-Source
 status: ready_to_execute
 stopped_at: ""
-last_updated: "2026-06-02T09:35:00.000Z"
-last_activity: 2026-06-02 — Phase 9 planned (4 plans, 2 waves, verification passed)
+last_updated: "2026-06-02T04:20:17Z"
+last_activity: 2026-06-02 — Plan 09-02 complete (data_generator.py extended with 4 ad-platform fixtures + PLATFORM_CURRENCIES)
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 4
-  completed_plans: 0
-  percent: 0
+  completed_plans: 2
+  percent: 50
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-01 after v2.0 milestone)
 ## Current Position
 
 Phase: 9 of 12 (Multi-Source Ingestion)
-Plan: 09-01 (next to execute)
-Status: Ready to execute (4 plans planned, verification passed)
-Last activity: 2026-06-02 — Phase 9 planned: 4 plans in 2 waves (09-01 ingest.py, 09-02 data_generator, 09-03 app.py rewrite, 09-04 tests)
+Plan: 09-03 (next to execute)
+Status: Ready to execute — 09-02 complete
+Last activity: 2026-06-02 — Plan 09-02 complete: data_generator.py extended with 4 ad-platform fixtures, PLATFORM_CURRENCIES dict, and 4 new CSVs in data/ (commits 4bbfcf6, 90835f9)
 
-Progress: [░░░░░░░░░░] 0% (v3.0 milestone)
+Progress: [████░░░░░░] 50% (v3.0 milestone, 2/4 plans)
 
 ## Performance Metrics
 
@@ -59,6 +59,17 @@ v3.0 planning decisions:
 - New deps (plotly, fpdf2, babel) added in Phase 11 only — additive, no Docker changes required
 - ingest.py is a new module; data.py and llm.py touched minimally per research architecture
 
+v3.0 execution decisions (09-01):
+- cost_usd column name kept despite holding reporting-currency value — preserves compute_campaign_agg compat without touching data.py (D-12)
+- difflib.get_close_matches (stdlib) chosen over rapidfuzz — no additional dep needed for 4-field matching
+- Source-prefix applied BEFORE pd.concat, not after — prevents ambiguity when same column name in multiple platforms
+- Phase 9 D-07 extra CRM column pass-through deferred to Phase 10
+
+v3.0 execution decisions (09-02):
+- sess_013 added to _META_ADS_ROWS to satisfy >=2 multi-platform session_id fan-out assertion (was only sess_010 initially)
+- _FIXTURE_FILE_MAP defined at module level so Plan 09-03 sidebar button can reference it externally
+- EUR/GBP cost_local values derived from USD/1.08 and USD/1.26 matching FX_RATES in ingest.py
+
 ### Pending Todos
 
 None.
@@ -77,6 +88,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-06-02
-Stopped at: Roadmap created for v3.0 — ready to plan Phase 9
+Last session: 2026-06-02T04:20:17Z
+Stopped at: Completed 09-02-PLAN.md (data_generator.py extended with 4 ad-platform fixtures, 4 new CSVs in data/, all verifications pass, commits 4bbfcf6 + 90835f9)
 Resume file: None

@@ -64,8 +64,8 @@ See archive: `.planning/milestones/v2.0-ROADMAP.md`
   4. The merged, normalized DataFrame flows into the existing analysis pipeline without breaking the live app at agent.rukesh.in
 **Plans**: 4 plans
 Plans:
-- [ ] 09-01-PLAN.md — ingest.py module: FX_RATES, SUPPORTED_CURRENCIES, ingest() function with source-prefix rename + FX normalization + CRM merge
-- [ ] 09-02-PLAN.md — data_generator.py extension + 4 platform fixture CSVs (Google Ads USD, Meta Ads EUR, LinkedIn GBP, Custom USD)
+- [x] 09-01-PLAN.md — ingest.py module: FX_RATES, SUPPORTED_CURRENCIES, ingest() function with source-prefix rename + FX normalization + CRM merge (commit a5f3f6f, 2026-06-02)
+- [x] 09-02-PLAN.md — data_generator.py extension + 4 platform fixture CSVs (Google Ads USD, Meta Ads EUR, LinkedIn GBP, Custom USD) (commits 4bbfcf6 + 90835f9, 2026-06-02)
 - [ ] 09-03-PLAN.md — app.py upload section rewrite: 4-platform grid + CRM mapping UI + sidebar Reporting Currency + Load Demo Data + Run Analysis gate
 - [ ] 09-04-PLAN.md — tests/test_ingest.py: 24+ unit tests covering FX, happy path, error branches, column collision, CRM mapping
 
@@ -118,11 +118,11 @@ Phases execute in numeric order: 9 → 10 → 11 → 12
 | 6. Waitlist Backend | v2.0 | 2/2 | ✅ Complete | 2026-06-01 |
 | 7. Landing Page & UI Polish | v2.0 | 4/4 | ✅ Complete | 2026-06-01 |
 | 8. Infrastructure Update | v2.0 | 3/3 | ✅ Complete | 2026-06-01 |
-| 9. Multi-Source Ingestion | v3.0 | 0/4 | In progress | - |
+| 9. Multi-Source Ingestion | v3.0 | 1/4 | In progress | - |
 | 10. Richer LLM Analysis | v3.0 | 0/TBD | Not started | - |
 | 11. Charts, Filters & Export | v3.0 | 0/TBD | Not started | - |
 | 12. Analysis Persistence | v3.0 | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-05-26*
-*Last updated: 2026-06-02 — Phase 9 planning complete (4 plans: ingest module, demo fixtures, upload UI, test suite). INGEST-01/02/03 mapped across plans.*
+*Last updated: 2026-06-02 — Plan 09-01 complete: ingest.py created (336 LOC, zero Streamlit imports, all verifications pass)*
