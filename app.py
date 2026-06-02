@@ -89,7 +89,7 @@ with st.sidebar:
     st.selectbox(
         label="Output currency",
         options=SUPPORTED_CURRENCIES,
-        index=0,
+        index=SUPPORTED_CURRENCIES.index("INR"),
         key="reporting_currency",
         help="All platform costs are converted to this currency before aggregation.",
         label_visibility="collapsed",
@@ -131,7 +131,7 @@ _state_defaults = {
     "custom_ads_bytes": None,
     "crm_bytes": None,
     "crm_field_map": None,
-    "reporting_currency": "USD",
+    "reporting_currency": "INR",
     "demo_mode_active": False,
 }
 for k, v in _state_defaults.items():
