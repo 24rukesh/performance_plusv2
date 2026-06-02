@@ -300,9 +300,12 @@ def ingest(
 
     crm_df = crm_df.rename(columns=rename_map_crm)
 
-    # Keep only the 4 standard fields — extra CRM columns are Phase 10 scope
-    # (see CONTEXT.md "Deferred Ideas" and Phase 9 D-07).
-    crm_df = crm_df[REQUIRED_CRM_FIELDS]
+    # Phase 10 D-06: preserve extra CRM columns with crm_ prefix instead of stripping them.
+    # The 4 required fields are already renamed to standard names by rename_map_crm above.
+    extra_crm_cols = [c for c in crm_df.columns if c not in REQUIRED_CRM_FIELDS]
+    rename_extra = {c: f"crm_{c}" for c in extra_crm_cols}
+    crm_df = crm_df.rename(columns=rename_extra)
+    # keep all columns (4 required + crm_-prefixed extras)
 
     # ------------------------------------------------------------------
     # Step 6 — Inner merge with validate="m:1" (Phase 9 D-14 + ARCH §1).

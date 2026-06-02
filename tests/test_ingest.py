@@ -485,3 +485,46 @@ def test_ingest_column_collision_source_prefix_renames():
 
     # Merge must have produced rows
     assert len(df) > 0, "Expected at least one merged row"
+
+
+# ===========================================================================
+# Task 4: CRM extra column pass-through tests (Phase 10 D-06) — 2 tests
+# ===========================================================================
+
+
+def test_ingest_extra_crm_columns_preserved_with_prefix():
+    """CRM CSV with 5 columns (4 required + 1 extra 'deal_stage') → merged_df contains 'crm_deal_stage'."""
+    crm_with_extra = [
+        {"session_id": "sess_1", "lead_status": "Qualified", "projected_value": 1000.0,
+         "sales_notes": "Good lead", "deal_stage": "Proposal"},
+        {"session_id": "sess_2", "lead_status": "Disqualified", "projected_value": 0.0,
+         "sales_notes": "Bad fit", "deal_stage": "Lost"},
+        {"session_id": "sess_3", "lead_status": "Nurture", "projected_value": 500.0,
+         "sales_notes": "Warm", "deal_stage": "Prospecting"},
+    ]
+    platform_csvs = [
+        ("Google Ads", _csv_bytes(_GOOGLE_ROWS), "USD", "google_ads"),
+    ]
+    df = ingest(platform_csvs, _csv_bytes(crm_with_extra), _IDENTITY_FIELD_MAP, "USD")
+
+    # Extra column must be present with crm_ prefix
+    assert "crm_deal_stage" in df.columns, (
+        f"Expected 'crm_deal_stage' in columns: {list(df.columns)}"
+    )
+    # Values must be preserved
+    assert "Proposal" in df["crm_deal_stage"].values, "Expected 'Proposal' in crm_deal_stage"
+    # Original name must not be present
+    assert "deal_stage" not in df.columns, "Plain 'deal_stage' should have been renamed to 'crm_deal_stage'"
+
+
+def test_ingest_no_extra_crm_columns_produces_no_crm_prefix_cols():
+    """CRM CSV with exactly 4 required columns → merged_df does NOT contain any 'crm_' columns."""
+    platform_csvs = [
+        ("Google Ads", _csv_bytes(_GOOGLE_ROWS), "USD", "google_ads"),
+    ]
+    df = ingest(platform_csvs, _csv_bytes(_CRM_STANDARD_ROWS), _IDENTITY_FIELD_MAP, "USD")
+
+    crm_extra_cols = [c for c in df.columns if c.startswith("crm_")]
+    assert crm_extra_cols == [], (
+        f"Expected no crm_-prefixed columns but found: {crm_extra_cols}"
+    )

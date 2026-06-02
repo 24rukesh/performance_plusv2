@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: — Advanced Analytics & Multi-Source
-status: completed
-stopped_at: Phase 10 context gathered (2026-06-02)
+status: planned
+stopped_at: Phase 10 planned (2026-06-02)
 last_updated: "2026-06-02"
-last_activity: "2026-06-02 — Phase 10 context gathered: richer LLM analysis decisions captured (commit c36aea7)"
+last_activity: "2026-06-02 — Phase 10 planned: 4 plans in 2 waves (tiktoken o200k_base, per-platform pivot, source_platforms schema, token gate UI)"
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 4
+  total_plans: 8
   completed_plans: 4
   percent: 25
 ---
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-01 after v2.0 milestone)
 
 **Core value:** A marketer can load demo data and instantly get AI-reasoned budget routing decisions based on what sales reps said about each lead — not just what the click data shows.
-**Current focus:** v3.0 — Phase 9: Multi-Source Ingestion
+**Current focus:** v3.0 — Phase 10: Richer LLM Analysis
 
 ## Current Position
 
-Phase: 9 of 12 (Multi-Source Ingestion)
-Plan: Phase 10 (next phase)
-Status: Ready to execute — Phase 9 all 4 plans complete
-Last activity: 2026-06-02 — Phase 9 complete: multi-source ingestion UI, ingest() call chain, smoke test approved (commits b8d5b9a, 5bbdc71)
+Phase: 10 of 12 (Richer LLM Analysis)
+Plan: 4 plans in 2 waves — ready to execute
+Status: Planned — Phase 10 ready for execution
+Last activity: 2026-06-02 — Phase 10 planned: 4 plans (ingest+data, llm, app, tests) in 2 waves, verification passed
 
 Progress: [██░░░░░░░░] 25% (v3.0 milestone, Phase 9 of 4 phases complete)
 
@@ -75,7 +75,9 @@ v3.0 execution decisions (09-02):
 
 ### Pending Todos
 
-- Phase 10 must extend `compute_campaign_agg` in data.py to natively handle source-prefixed numeric columns (`google_ads_clicks`, `meta_ads_clicks`, `linkedin_ads_clicks`, `custom_ads_clicks`, etc.) and aggregate them into `clicks`, `impressions`, and `conversion_rate` per campaign. Once done, remove the Phase 9 bridge block in `app.py` (commit `5bbdc71`).
+- Phase 10 planned with 4 PLAN.md files: 10-01 (ingest.py CRM pass-through + data.py multi-source agg), 10-02 (llm.py schema + prompt + tiktoken helper), 10-03 (app.py bridge removal + token gate), 10-04 (tests). Ready to execute.
+- CRITICAL: tiktoken encoding for gpt-4o is o200k_base (not cl100k_base) — plans updated, but verify during execution.
+- Phase 9 bridge block in app.py (commit 5bbdc71, lines ~362–371) is deleted in Plan 10-03 Task 1.
 
 ### Blockers/Concerns
 
