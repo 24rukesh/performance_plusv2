@@ -7,7 +7,8 @@
       "percentage_change": -100,
       "semantic_reasoning": "The sales notes indicate complete misalignment with phrases like 'Wrong segment' and 'No enterprise need.'",
       "confidence": 1.0,
-      "evidence_count": 6
+      "evidence_count": 6,
+      "source_platforms": []
     },
     {
       "campaign_id": "cmp_brand_awareness",
@@ -15,7 +16,8 @@
       "percentage_change": 0,
       "semantic_reasoning": "Sales notes define prospects as 'Top-of-funnel only,' lacking solid indicators for budget adjustment.",
       "confidence": 0.5,
-      "evidence_count": 2
+      "evidence_count": 2,
+      "source_platforms": []
     },
     {
       "campaign_id": "cmp_competitor_conquest",
@@ -23,7 +25,8 @@
       "percentage_change": 50,
       "semantic_reasoning": "Multiple notes highlight strong alignment and readiness to switch, such as 'Ready to sign next week' and 'Motivated to switch.'",
       "confidence": 1.0,
-      "evidence_count": 5
+      "evidence_count": 5,
+      "source_platforms": []
     },
     {
       "campaign_id": "cmp_linkedin_outbound",
@@ -31,7 +34,8 @@
       "percentage_change": -30,
       "semantic_reasoning": "Indications of lukewarm interest and responsiveness issues suggest reduced urgency, e.g., 'lukewarm interest' and 'unresponsive.'",
       "confidence": 0.8,
-      "evidence_count": 3
+      "evidence_count": 3,
+      "source_platforms": []
     },
     {
       "campaign_id": "cmp_retargeting",
@@ -39,7 +43,8 @@
       "percentage_change": -20,
       "semantic_reasoning": "Notes show mixed signals with some engagement but also lost opportunities due to pricing, e.g., 'Went with a cheaper option.'",
       "confidence": 0.7,
-      "evidence_count": 4
+      "evidence_count": 4,
+      "source_platforms": []
     }
   ]
 }
