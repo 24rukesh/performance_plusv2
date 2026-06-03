@@ -1,5 +1,6 @@
 import os
 import pathlib
+import datetime
 
 import streamlit as st
 import pandas as pd
@@ -10,6 +11,7 @@ from dotenv import load_dotenv
 import llm
 from llm import run_analysis, count_prompt_tokens
 from ui_helpers import _badge_html, _pct_html, build_exec_summary_html
+from pdf_report import generate_pdf
 from ingest import SUPPORTED_CURRENCIES, REQUIRED_CRM_FIELDS, auto_suggest_crm_columns, ingest
 
 load_dotenv()
@@ -589,6 +591,44 @@ if st.session_state["merged_df"] is not None:
                         st.caption(f"Confidence: {round(c.confidence * 100)}%  ·  Sessions: {c.evidence_count}")
 
             st.caption(f"Reasoning grounded in sales-rep qualitative notes — {len(result.campaigns)} campaigns analysed.")
+
+            # Export buttons — per D-10: bottom of Campaign Actions tab, below comparison section
+            st.divider()
+            _col_pdf, _col_csv = st.columns(2)
+
+            # Build meta dict for PDF header
+            _merged_df_local = st.session_state["merged_df"]
+            if "platform" in _merged_df_local.columns:
+                _platforms_str = ", ".join(sorted(_merged_df_local["platform"].unique().tolist()))
+            else:
+                _platforms_str = "Single source"
+            _meta = {
+                "date": datetime.date.today().isoformat(),
+                "platforms_used": _platforms_str,
+                "session_count": len(_merged_df_local),
+                "reporting_currency": st.session_state["reporting_currency"],
+            }
+            _pdf_bytes = generate_pdf(result, _meta)
+
+            with _col_pdf:
+                st.download_button(
+                    label="Download PDF Report",
+                    data=_pdf_bytes,
+                    file_name="performance_plus_report.pdf",
+                    mime="application/pdf",
+                    key="download_pdf",
+                )
+
+            # CSV export — campaign_agg (not merged_df) per D-11
+            with _col_csv:
+                _csv_bytes = st.session_state["campaign_agg"].to_csv(index=False).encode("utf-8")
+                st.download_button(
+                    label="Download CSV",
+                    data=_csv_bytes,
+                    file_name="campaign_analysis.csv",
+                    mime="text/csv",
+                    key="download_csv",
+                )
 
 # per UI-SPEC section 4.6: demo-mode caption near Run Analysis area
 if st.session_state.get("demo_mode_active") and st.session_state.get("analysis_result") is None:
