@@ -14,6 +14,7 @@ def _one_campaign_result(**overrides):
         semantic_reasoning="Reps flagged disqualified leads.",
         confidence=0.87,
         evidence_count=6,
+        source_platforms=[],
     )
     defaults.update(overrides)
     return AnalysisResult(

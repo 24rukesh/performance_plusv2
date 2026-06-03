@@ -72,3 +72,102 @@ def test_app_calls_ingest():
     assert "reporting_currency" in source, (
         "app.py does not reference 'reporting_currency' — the sidebar currency selectbox is absent"
     )
+
+
+# ---------------------------------------------------------------------------
+# Gap 2 — INGEST-01/02: "Load Demo Data" handler sets crm_field_map to the
+#          identity mapping {f: f for f in REQUIRED_CRM_FIELDS}
+# ---------------------------------------------------------------------------
+
+def test_app_load_demo_sets_crm_field_map():
+    """When the Load Demo Data button fires, app.py must set crm_field_map to
+    the identity mapping built from REQUIRED_CRM_FIELDS.  This is verified
+    structurally: all four load-bearing strings must appear in the source."""
+    source = APP_PY.read_text()
+
+    # The sidebar button key used as the click target
+    assert "load_demo_sidebar" in source, (
+        "app.py does not contain 'load_demo_sidebar' — the Load Demo Data button key is absent"
+    )
+
+    # crm_field_map must be set inside the handler
+    assert "crm_field_map" in source, (
+        "app.py does not reference 'crm_field_map' — the session-state key is absent"
+    )
+
+    # REQUIRED_CRM_FIELDS must be referenced (identity mapping iterates over it)
+    assert "REQUIRED_CRM_FIELDS" in source, (
+        "app.py does not reference REQUIRED_CRM_FIELDS — identity mapping is not built from it"
+    )
+
+    # The identity mapping pattern {f: f for f in ...} must appear verbatim
+    assert "{f: f for f in REQUIRED_CRM_FIELDS}" in source, (
+        "app.py does not contain '{f: f for f in REQUIRED_CRM_FIELDS}' — "
+        "crm_field_map is not set to the identity mapping on Load Demo Data"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Gap 3 — AGENT-02 app-layer: source_platforms is rendered inside the results
+#          expander via st.caption
+# ---------------------------------------------------------------------------
+
+def test_app_renders_source_platforms_in_expander():
+    """The results expander block must reference source_platforms and render it
+    via st.caption — ensuring platform attribution appears in the per-campaign
+    detail view."""
+    source = APP_PY.read_text()
+
+    # source_platforms must be referenced (conditional render guard + join)
+    assert "source_platforms" in source, (
+        "app.py does not reference 'source_platforms' — platform attribution is absent from results"
+    )
+
+    # st.caption must appear in the same file as the expander (rendering vehicle)
+    assert "st.caption" in source, (
+        "app.py does not call st.caption — source_platforms rendering path is absent"
+    )
+
+    # st.expander must exist (the results block context manager)
+    assert "st.expander" in source, (
+        "app.py does not use st.expander — the per-campaign results block is absent"
+    )
+
+    # The actual caption line combining source_platforms must be present
+    assert "', '.join(c.source_platforms)" in source, (
+        "app.py does not contain \"', '.join(c.source_platforms)\" — "
+        "source_platforms values are not joined and rendered inside the expander"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Gap 4 — AGENT-03 app-layer: token gate is fully wired in app.py
+# ---------------------------------------------------------------------------
+
+def test_app_token_gate_wired():
+    """The Phase 10 token gate must be fully wired: threshold constant, warning
+    button label, session-state confirmation key, and the token-counting helper
+    must all be present in app.py."""
+    source = APP_PY.read_text()
+
+    # 60_000 threshold constant (with underscores as written in source)
+    assert "60_000" in source, (
+        "app.py does not contain '60_000' — the token-gate threshold is absent"
+    )
+
+    # The bypass button label shown to the user
+    assert "Continue anyway" in source, (
+        "app.py does not contain 'Continue anyway' — the token-gate bypass button is absent"
+    )
+
+    # Session-state key that records the user's bypass confirmation
+    assert "token_warning_confirmed" in source, (
+        "app.py does not contain 'token_warning_confirmed' — "
+        "the token-gate confirmation state key is absent"
+    )
+
+    # The helper function that counts tokens before calling the LLM
+    assert "count_prompt_tokens" in source, (
+        "app.py does not reference 'count_prompt_tokens' — "
+        "the token-counting call is absent from the token gate"
+    )

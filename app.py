@@ -105,6 +105,7 @@ with st.sidebar:
             st.session_state["linkedin_ads_bytes"] = (data_dir / "linkedin_ads.csv").read_bytes()
             st.session_state["custom_ads_bytes"] = (data_dir / "custom_ads.csv").read_bytes()
             st.session_state["crm_bytes"] = (data_dir / "crm_data.csv").read_bytes()
+            st.session_state["crm_field_map"] = {f: f for f in REQUIRED_CRM_FIELDS}
             st.session_state["demo_mode_active"] = True
         except FileNotFoundError:
             st.error("Demo data files not found. Run: python data_generator.py")
@@ -439,6 +440,8 @@ if st.session_state["merged_df"] is not None:
                     unsafe_allow_html=True,
                 )
                 st.write(c.semantic_reasoning)
+                if c.source_platforms:
+                    st.caption(f"Sources: {', '.join(c.source_platforms)}")
                 st.caption(
                     f"Confidence: {round(c.confidence * 100)}%  ·  "
                     f"Sessions analysed: {c.evidence_count}"
