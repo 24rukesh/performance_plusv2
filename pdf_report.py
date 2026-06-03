@@ -57,7 +57,7 @@ def generate_pdf(result: "AnalysisResult", meta: dict) -> bytes:
                 f"{c.percentage_change:+d}%",
                 f"{round(c.confidence * 100)}%",
                 str(c.evidence_count),
-                ", ".join(c.source_platforms) if c.source_platforms else "—",
+                ", ".join(c.source_platforms) if c.source_platforms else "-",
             ]
         )
 
