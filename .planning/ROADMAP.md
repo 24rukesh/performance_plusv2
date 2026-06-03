@@ -96,7 +96,7 @@ Plans:
 **Plans**: 4 plans
 Plans:
 - [ ] 11-01-PLAN.md — Add plotly/fpdf2 deps (uv add) + create pdf_report.py with generate_pdf(result, meta) -> bytes
-- [ ] 11-02-PLAN.md — Restructure app.py results section into st.tabs + Charts tab (scatter + bar charts, qualified_leads_count inline derivation)
+- [x] 11-02-PLAN.md — Restructure app.py results section into st.tabs + Charts tab (scatter + bar charts, qualified_leads_count inline derivation) (commit 7c766fc, 2026-06-03)
 - [ ] 11-03-PLAN.md — Campaign Actions tab: Filters & Sort expander, comparison checkboxes (max-3 enforcement), session drill-down inline dataframe, Side-by-Side Comparison section
 - [ ] 11-04-PLAN.md — Wire export buttons (PDF + CSV) into Campaign Actions tab; write tests/test_pdf_report.py (5 tests)
 
@@ -129,9 +129,9 @@ Phases execute in numeric order: 9 → 10 → 11 → 12
 | 8. Infrastructure Update | v2.0 | 3/3 | ✅ Complete | 2026-06-01 |
 | 9. Multi-Source Ingestion | v3.0 | 1/4 | In progress | - |
 | 10. Richer LLM Analysis | v3.0 | 4/4 | Complete | 2026-06-02 |
-| 11. Charts, Filters & Export | v3.0 | 0/4 | Not started | - |
+| 11. Charts, Filters & Export | v3.0 | 1/4 | In progress | - |
 | 12. Analysis Persistence | v3.0 | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-05-26*
-*Last updated: 2026-06-03 — Phase 11 planned (4 plans, 2 waves); ready for execution*
+*Last updated: 2026-06-03 — Phase 11 Plan 02 complete: 3-tab layout + Charts tab; VIEW-01 delivered*

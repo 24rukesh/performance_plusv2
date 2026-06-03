@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: — Advanced Analytics & Multi-Source
 status: in_progress
-stopped_at: Phase 11 planned (2026-06-03)
+stopped_at: Phase 11 Plan 02 complete (2026-06-03)
 last_updated: "2026-06-03"
-last_activity: "2026-06-03 — Phase 11 plans created: 4 plans in 3 waves, verification passed, ready to execute"
+last_activity: "2026-06-03 — Phase 11 Plan 02 complete: 3-tab layout + Charts tab (scatter + bar) added to app.py; VIEW-01 delivered"
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 12
-  completed_plans: 8
-  percent: 50
+  completed_plans: 9
+  percent: 53
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-01 after v2.0 milestone)
 ## Current Position
 
 Phase: 10 of 12 (Richer LLM Analysis)
-Plan: 10-04 complete; Phase 10 all done; Phase 11 (Charts, Filters & Export) is next
-Status: Phase 10 complete — all 4 plans done
-Last activity: 2026-06-02 — Phase 10 Plan 04 complete: 49 tests pass (test_data.py 9 + test_llm.py 14 + test_ingest.py 26)
+Plan: 11-02 complete; Phase 11 in progress (2 of 4 plans done)
+Status: Phase 11 in progress — Plans 11-01 and 11-02 done
+Last activity: 2026-06-03 — Phase 11 Plan 02 complete: 3-tab layout + Plotly charts; VIEW-01 delivered; 124 tests pass
 
 Progress: [████░░░░░░] 50% (v3.0 milestone, Phase 10 of 4 phases complete)
 
@@ -85,6 +85,7 @@ v3.0 execution decisions (09-02):
 - Phase 10 commits: 7462345 (crm_ pass-through), c31b532 (compute_campaign_agg multi-source), 3e6b04a (llm.py schema+prompt+tiktoken), cda5a78 (fixture+tiktoken install), 9ecbf14 (app.py token gate+bridge removal).
 - AGENT-01, AGENT-02, AGENT-03 requirements met by Phase 10.
 - Phase 11 planned (2026-06-03): 4 plans in 3 waves. Wave 1: 11-01 (deps+pdf_report.py), 11-02 (tab restructure+charts). Wave 2: 11-03 (filters+comparison+drill-down). Wave 3: 11-04 (export buttons+tests). Ready to execute.
+- Phase 11 Plan 02 complete (2026-06-03): app.py restructured into 3-tab layout; Charts tab with px.scatter + px.bar; VIEW-01 delivered. Commit: 7c766fc.
 
 ### Blockers/Concerns
 

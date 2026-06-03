@@ -22,7 +22,7 @@
 
 ### Dynamic Views (VIEW)
 
-- [ ] **VIEW-01**: User can view a spend vs qualified leads scatter chart (color-coded by platform) and an action distribution chart for the current analysis, presented in a tabbed layout alongside the data preview and AI recommendations
+- [x] **VIEW-01**: User can view a spend vs qualified leads scatter chart (color-coded by platform) and an action distribution chart for the current analysis, presented in a tabbed layout alongside the data preview and AI recommendations
 - [ ] **VIEW-02**: User can filter results by platform, action type, and campaign name, and sort results by spend, campaign name, or recommended action
 - [ ] **VIEW-03**: User can select up to 3 campaigns for side-by-side comparison and drill down to session-level rows for any campaign in the results view
 
@@ -64,7 +64,7 @@
 | AGENT-01 | Phase 10 | — |
 | AGENT-02 | Phase 10 | — |
 | AGENT-03 | Phase 10 | — |
-| VIEW-01 | Phase 11 | — |
+| VIEW-01 | Phase 11 | 11-02 ✅ |
 | VIEW-02 | Phase 11 | — |
 | VIEW-03 | Phase 11 | — |
 | MGMT-01 | Phase 12 | — |
