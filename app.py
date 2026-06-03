@@ -3,6 +3,7 @@ import pathlib
 
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 from openai import OpenAI
 from data import compute_campaign_agg
 from dotenv import load_dotenv
@@ -365,25 +366,6 @@ if _gate_ready:
 if st.session_state["merged_df"] is not None:
     merged_df = st.session_state["merged_df"]
 
-    st.subheader("Stitched Dataframe Preview")
-
-    col1, col2 = st.columns(2)
-    col1.metric("Sessions", len(merged_df))
-    col2.metric("Campaigns", merged_df["campaign_id"].nunique())
-
-    # Dynamic caption reflecting which platforms contributed + reporting currency
-    if "platform" in merged_df.columns:
-        _platforms_used = sorted(merged_df["platform"].unique().tolist())
-        if _platforms_used:
-            st.caption(
-                f"Sources: {', '.join(_platforms_used)} + CRM "
-                f"(reporting currency: {st.session_state['reporting_currency']})"
-            )
-    else:
-        st.caption("Loaded from: data/web_analytics.csv + data/crm_data.csv")
-
-    st.dataframe(merged_df, use_container_width=True, hide_index=True)
-
     if st.session_state["campaign_agg"] is not None:
         # demo_ready: env DEMO_MODE=1 OR sidebar "Load Demo Data" used — both serve fixture without a key
         demo_ready = (DEMO_MODE or st.session_state.get("demo_mode_active", False)) and llm.client is None
@@ -428,25 +410,93 @@ if st.session_state["merged_df"] is not None:
 
     if st.session_state["analysis_result"] is not None:
         result = st.session_state["analysis_result"]
-        st.subheader("Budget Action Results")
-        st.markdown(build_exec_summary_html(result.executive_summary), unsafe_allow_html=True)
-        st.subheader("Campaign Budget Actions")
-        for c in result.campaigns:
-            pct_display = f"+{c.percentage_change}%" if c.percentage_change > 0 else f"{c.percentage_change}%"
-            label = f"{c.campaign_id} — {c.budget_action.upper()} {pct_display}"
-            with st.expander(label, expanded=False):
-                st.markdown(
-                    f"{_badge_html(c.budget_action)}  &nbsp;  {_pct_html(c.percentage_change)}",
-                    unsafe_allow_html=True,
-                )
-                st.write(c.semantic_reasoning)
-                if c.source_platforms:
-                    st.caption(f"Sources: {', '.join(c.source_platforms)}")
-                st.caption(
-                    f"Confidence: {round(c.confidence * 100)}%  ·  "
-                    f"Sessions analysed: {c.evidence_count}"
-                )
-        st.caption(f"Reasoning grounded in sales-rep qualitative notes — {len(result.campaigns)} campaigns analysed.")
+
+        # Derive qualified_leads_count inline — campaign_agg does NOT have this column
+        qual_counts = (
+            st.session_state["merged_df"]
+            .query("lead_status.str.lower() == 'qualified'")
+            .groupby("campaign_id")
+            .size()
+            .reset_index(name="qualified_leads_count")
+        )
+        chart_df = (
+            st.session_state["campaign_agg"][["campaign_id", "total_cost_usd", "source_platforms"]]
+            .merge(qual_counts, on="campaign_id", how="left")
+            .fillna({"qualified_leads_count": 0})
+        )
+        chart_df["source_platforms"] = chart_df["source_platforms"].replace("", "Single source")
+
+        tab_preview, tab_charts, tab_actions = st.tabs(["Data Preview", "Charts", "Campaign Actions"])
+
+        with tab_preview:
+            col1, col2 = st.columns(2)
+            col1.metric("Sessions", len(merged_df))
+            col2.metric("Campaigns", merged_df["campaign_id"].nunique())
+            if "platform" in merged_df.columns:
+                _platforms_used = sorted(merged_df["platform"].unique().tolist())
+                if _platforms_used:
+                    st.caption(
+                        f"Sources: {', '.join(_platforms_used)} + CRM "
+                        f"(reporting currency: {st.session_state['reporting_currency']})"
+                    )
+            else:
+                st.caption("Loaded from: data/web_analytics.csv + data/crm_data.csv")
+            st.dataframe(merged_df, use_container_width=True, hide_index=True)
+
+        with tab_charts:
+            scatter_fig = px.scatter(
+                chart_df,
+                x="total_cost_usd",
+                y="qualified_leads_count",
+                color="source_platforms",
+                hover_name="campaign_id",
+                title="Spend vs Qualified Leads",
+                labels={
+                    "total_cost_usd": "Total Spend (USD)",
+                    "qualified_leads_count": "Qualified Leads",
+                    "source_platforms": "Platform",
+                },
+            )
+            st.plotly_chart(scatter_fig, use_container_width=True)
+
+            action_df = pd.DataFrame([
+                {"campaign_id": c.campaign_id, "budget_action": c.budget_action.upper()}
+                for c in result.campaigns
+            ])
+            bar_fig = px.bar(
+                action_df,
+                x="campaign_id",
+                color="budget_action",
+                title="Recommended Actions by Campaign",
+                color_discrete_map={
+                    "INCREASE": "#09ab3b",
+                    "PAUSE": "#ff2b2b",
+                    "DECREASE": "#faca2b",
+                    "INSUFFICIENT_DATA": "#808495",
+                },
+                labels={"campaign_id": "Campaign", "budget_action": "Action"},
+            )
+            st.plotly_chart(bar_fig, use_container_width=True)
+
+        with tab_actions:
+            st.markdown(build_exec_summary_html(result.executive_summary), unsafe_allow_html=True)
+            st.subheader("Campaign Budget Actions")
+            for c in result.campaigns:
+                pct_display = f"+{c.percentage_change}%" if c.percentage_change > 0 else f"{c.percentage_change}%"
+                label = f"{c.campaign_id} — {c.budget_action.upper()} {pct_display}"
+                with st.expander(label, expanded=False):
+                    st.markdown(
+                        f"{_badge_html(c.budget_action)}  &nbsp;  {_pct_html(c.percentage_change)}",
+                        unsafe_allow_html=True,
+                    )
+                    st.write(c.semantic_reasoning)
+                    if c.source_platforms:
+                        st.caption(f"Sources: {', '.join(c.source_platforms)}")
+                    st.caption(
+                        f"Confidence: {round(c.confidence * 100)}%  ·  "
+                        f"Sessions analysed: {c.evidence_count}"
+                    )
+            st.caption(f"Reasoning grounded in sales-rep qualitative notes — {len(result.campaigns)} campaigns analysed.")
 
 # per UI-SPEC section 4.6: demo-mode caption near Run Analysis area
 if st.session_state.get("demo_mode_active") and st.session_state.get("analysis_result") is None:
