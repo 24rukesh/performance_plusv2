@@ -479,12 +479,77 @@ if st.session_state["merged_df"] is not None:
             st.plotly_chart(bar_fig, use_container_width=True)
 
         with tab_actions:
+            # Build platform options from result.campaigns (list[str], NOT pipe-delimited)
+            all_platforms = sorted({p for c in result.campaigns for p in c.source_platforms})
+
+            # Filters & Sort expander (collapsed by default, above executive summary per D-03)
+            with st.expander("🔍 Filters & Sort", expanded=False):
+                st.multiselect("Platform", options=all_platforms, key="filter_platforms")
+                st.multiselect("Action type", options=["INCREASE", "DECREASE", "PAUSE"], key="filter_actions")
+                st.text_input("Campaign name contains", key="filter_name")
+                st.selectbox("Sort by", ["Spend ↓", "Campaign name A→Z", "Recommended action A→Z"], key="sort_field")
+
+            # Read widget values (outside expander block, via session_state)
+            sel_platforms = st.session_state.get("filter_platforms", [])
+            sel_actions = st.session_state.get("filter_actions", [])
+            search_name = st.session_state.get("filter_name", "")
+            sort_field = st.session_state.get("sort_field", "Spend ↓")
+
+            # Apply filters
+            filtered = list(result.campaigns)
+            if sel_platforms:
+                filtered = [c for c in filtered if any(p in sel_platforms for p in c.source_platforms)]
+            if sel_actions:
+                filtered = [c for c in filtered if c.budget_action.upper() in sel_actions]
+            if search_name:
+                filtered = [c for c in filtered if search_name.lower() in c.campaign_id.lower()]
+
+            # Apply sort
+            if sort_field == "Spend ↓":
+                spend_map = dict(zip(
+                    st.session_state["campaign_agg"]["campaign_id"],
+                    st.session_state["campaign_agg"]["total_cost_usd"],
+                ))
+                filtered = sorted(filtered, key=lambda c: spend_map.get(c.campaign_id, 0), reverse=True)
+            elif sort_field == "Campaign name A→Z":
+                filtered = sorted(filtered, key=lambda c: c.campaign_id)
+            elif sort_field == "Recommended action A→Z":
+                filtered = sorted(filtered, key=lambda c: c.budget_action)
+
+            # Active filter state caption + reset button
+            _any_filter_active = bool(sel_platforms or sel_actions or search_name)
+            if _any_filter_active:
+                total = len(result.campaigns)
+                st.caption(f"Showing {len(filtered)} of {total} campaigns")
+                if st.button("Reset filters", key="reset_filters_btn"):
+                    for k in ["filter_platforms", "filter_actions", "filter_name"]:
+                        if k in st.session_state:
+                            del st.session_state[k]
+                    st.rerun()
+
+            # Executive summary (below filters, per D-03)
             st.markdown(build_exec_summary_html(result.executive_summary), unsafe_allow_html=True)
+
+            # Compute selected_ids BEFORE the loop
+            selected_ids = [
+                c.campaign_id for c in result.campaigns
+                if st.session_state.get(f"compare_{c.campaign_id}", False)
+            ]
+            limit_reached = len(selected_ids) >= 3
+
+            # Campaign expanders with comparison checkboxes + inline drill-down
             st.subheader("Campaign Budget Actions")
-            for c in result.campaigns:
+            for c in filtered:
                 pct_display = f"+{c.percentage_change}%" if c.percentage_change > 0 else f"{c.percentage_change}%"
                 label = f"{c.campaign_id} — {c.budget_action.upper()} {pct_display}"
+                already_selected = st.session_state.get(f"compare_{c.campaign_id}", False)
+                can_add = already_selected or not limit_reached
                 with st.expander(label, expanded=False):
+                    st.checkbox(
+                        "Add to comparison",
+                        key=f"compare_{c.campaign_id}",
+                        disabled=not can_add,
+                    )
                     st.markdown(
                         f"{_badge_html(c.budget_action)}  &nbsp;  {_pct_html(c.percentage_change)}",
                         unsafe_allow_html=True,
@@ -496,6 +561,33 @@ if st.session_state["merged_df"] is not None:
                         f"Confidence: {round(c.confidence * 100)}%  ·  "
                         f"Sessions analysed: {c.evidence_count}"
                     )
+                    # Session drill-down — inline dataframe (not nested expander) per D-02
+                    session_rows = st.session_state["merged_df"][
+                        st.session_state["merged_df"]["campaign_id"] == c.campaign_id
+                    ][["session_id", "lead_status", "projected_value", "sales_notes"]]
+                    st.dataframe(session_rows, use_container_width=True, hide_index=True)
+
+            # Max-3 warning (below the loop, per D-06)
+            if limit_reached:
+                st.warning("Maximum 3 campaigns for side-by-side comparison — deselect one before adding another.")
+
+            # Side-by-side comparison section (D-06, D-07)
+            if selected_ids:
+                selected_campaigns = [c for c in result.campaigns if c.campaign_id in selected_ids]
+                st.subheader("Side-by-Side Comparison")
+                cols = st.columns(len(selected_campaigns))
+                for col, c in zip(cols, selected_campaigns):
+                    with col:
+                        st.markdown(f"**{c.campaign_id}**")
+                        st.markdown(
+                            f"{_badge_html(c.budget_action)}  &nbsp;  {_pct_html(c.percentage_change)}",
+                            unsafe_allow_html=True,
+                        )
+                        st.write(c.semantic_reasoning)
+                        if c.source_platforms:
+                            st.caption(f"Platforms: {', '.join(c.source_platforms)}")
+                        st.caption(f"Confidence: {round(c.confidence * 100)}%  ·  Sessions: {c.evidence_count}")
+
             st.caption(f"Reasoning grounded in sales-rep qualitative notes — {len(result.campaigns)} campaigns analysed.")
 
 # per UI-SPEC section 4.6: demo-mode caption near Run Analysis area
