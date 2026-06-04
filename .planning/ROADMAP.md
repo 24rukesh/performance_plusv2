@@ -110,10 +110,10 @@ Plans:
   3. When the OpenAI API is unavailable, the app falls back to a cached fixture response (DEMO_MODE) so the demo remains functional offline
 **Plans**: 4 plans
 Plans:
-- [ ] 12-01-PLAN.md — st_db.py: new Postgres persistence module (analysis_runs + analysis_logs tables, save/list/load/delete/log CRUD) + tests/test_st_db.py with mocked psycopg2
-- [ ] 12-02-PLAN.md — llm.py: wrap run_analysis() with try/except openai.OpenAIError fallback to _load_fixture() + api_fallback_active session state flag + fallback selectivity tests in tests/test_llm.py
-- [ ] 12-03-PLAN.md — app.py: st_db startup init, api_fallback_active state defaults + banner, Save Analysis section in Campaign Actions tab, Past Analyses sidebar section
-- [ ] 12-04-PLAN.md — tests/test_evals.py: AI-SPEC eval Dimensions 1, 3, 7 (fallback selectivity, fixture schema compliance, budget decisiveness); tests/test_st_db.py CRUD round-trip test
+- [x] 12-01-PLAN.md — st_db.py: new Postgres persistence module (analysis_runs + analysis_logs tables, save/list/load/delete/log CRUD) + tests/test_st_db.py with mocked psycopg2
+- [x] 12-02-PLAN.md — llm.py: wrap run_analysis() with try/except openai.OpenAIError fallback to _load_fixture() + api_fallback_active session state flag + fallback selectivity tests in tests/test_llm.py
+- [x] 12-03-PLAN.md — app.py: st_db startup init, api_fallback_active state defaults + banner, Save Analysis section in Campaign Actions tab, Past Analyses sidebar section
+- [x] 12-04-PLAN.md — tests/test_evals.py: AI-SPEC eval Dimensions 1, 3, 7 (fallback selectivity, fixture schema compliance, budget decisiveness); tests/test_st_db.py CRUD round-trip test (commit 60ebe09, 2026-06-04)
 
 ---
 
@@ -135,8 +135,8 @@ Phases execute in numeric order: 9 → 10 → 11 → 12
 | 9. Multi-Source Ingestion | v3.0 | 4/4 | Complete | 2026-06-02 |
 | 10. Richer LLM Analysis | v3.0 | 4/4 | Complete | 2026-06-02 |
 | 11. Charts, Filters & Export | v3.0 | 4/4 | Complete | 2026-06-03 |
-| 12. Analysis Persistence | v3.0 | 0/4 | Not started | - |
+| 12. Analysis Persistence | v3.0 | 4/4 | ✅ Complete | 2026-06-04 |
 
 ---
 *Roadmap created: 2026-05-26*
-*Last updated: 2026-06-04 — Phase 12 planned: 4 plans (st_db.py persistence, llm.py fallback, app.py UI, evals)*
+*Last updated: 2026-06-04 — Phase 12 complete: all 4 plans done. v3.0 milestone fully delivered.*
