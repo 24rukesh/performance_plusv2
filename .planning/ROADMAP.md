@@ -95,10 +95,10 @@ Plans:
   4. User can download the current analysis as a PDF report (via fpdf2) and as a CSV file via st.download_button
 **Plans**: 4 plans
 Plans:
-- [ ] 11-01-PLAN.md — Add plotly/fpdf2 deps (uv add) + create pdf_report.py with generate_pdf(result, meta) -> bytes
+- [x] 11-01-PLAN.md — Add plotly/fpdf2 deps (uv add) + create pdf_report.py with generate_pdf(result, meta) -> bytes
 - [x] 11-02-PLAN.md — Restructure app.py results section into st.tabs + Charts tab (scatter + bar charts, qualified_leads_count inline derivation) (commit 7c766fc, 2026-06-03)
-- [ ] 11-03-PLAN.md — Campaign Actions tab: Filters & Sort expander, comparison checkboxes (max-3 enforcement), session drill-down inline dataframe, Side-by-Side Comparison section
-- [ ] 11-04-PLAN.md — Wire export buttons (PDF + CSV) into Campaign Actions tab; write tests/test_pdf_report.py (5 tests)
+- [x] 11-03-PLAN.md — Campaign Actions tab: Filters & Sort expander, comparison checkboxes (max-3 enforcement), session drill-down inline dataframe, Side-by-Side Comparison section (commits 8b28cad + de4a0e8, 2026-06-03)
+- [x] 11-04-PLAN.md — Wire export buttons (PDF + CSV) into Campaign Actions tab; write tests/test_pdf_report.py (5 tests) (commits 7979d9c + de3cc74, 2026-06-03)
 
 ### Phase 12: Analysis Persistence
 **Goal**: Users can save analyses to Postgres with a label and reload them from a sidebar list without re-uploading CSVs, while the app stays fully functional when the OpenAI API is unavailable
@@ -129,9 +129,9 @@ Phases execute in numeric order: 9 → 10 → 11 → 12
 | 8. Infrastructure Update | v2.0 | 3/3 | ✅ Complete | 2026-06-01 |
 | 9. Multi-Source Ingestion | v3.0 | 1/4 | In progress | - |
 | 10. Richer LLM Analysis | v3.0 | 4/4 | Complete | 2026-06-02 |
-| 11. Charts, Filters & Export | v3.0 | 1/4 | In progress | - |
+| 11. Charts, Filters & Export | v3.0 | 4/4 | Complete | 2026-06-03 |
 | 12. Analysis Persistence | v3.0 | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-05-26*
-*Last updated: 2026-06-03 — Phase 11 Plan 02 complete: 3-tab layout + Charts tab; VIEW-01 delivered*
+*Last updated: 2026-06-03 — Phase 11 complete: PDF/CSV export buttons wired, 5 test_pdf_report.py tests pass; VIEW-01/02/03 + MGMT-02 delivered*

@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: — Advanced Analytics & Multi-Source
 status: in_progress
-stopped_at: Phase 11 Plan 03 complete (2026-06-03)
+stopped_at: Phase 11 Plan 04 complete (2026-06-03)
 last_updated: "2026-06-03"
-last_activity: "2026-06-03 — Phase 11 Plan 03 complete: filter/sort/comparison/drill-down in Campaign Actions tab; VIEW-02 and VIEW-03 delivered"
+last_activity: "2026-06-03 — Phase 11 Plan 04 complete: PDF and CSV export buttons wired; 5 new test_pdf_report.py tests pass; MGMT-02 delivered"
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 12
-  completed_plans: 10
-  percent: 58
+  completed_plans: 11
+  percent: 65
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-01 after v2.0 milestone)
 ## Current Position
 
 Phase: 10 of 12 (Richer LLM Analysis)
-Plan: 11-03 complete; Phase 11 in progress (3 of 4 plans done)
-Status: Phase 11 in progress — Plans 11-01, 11-02, and 11-03 done
-Last activity: 2026-06-03 — Phase 11 Plan 03 complete: filter/sort/comparison/drill-down in Campaign Actions tab; VIEW-02 and VIEW-03 delivered; 124 tests pass
+Plan: 11-04 complete; Phase 11 complete (all 4 plans done)
+Status: Phase 11 complete — all plans done; MGMT-02, VIEW-01, VIEW-02, VIEW-03 delivered
+Last activity: 2026-06-03 — Phase 11 Plan 04 complete: PDF and CSV export buttons wired into Campaign Actions tab; 5 test_pdf_report.py tests pass; 129 tests pass total
 
 Progress: [████░░░░░░] 50% (v3.0 milestone, Phase 10 of 4 phases complete)
 
@@ -87,6 +87,9 @@ v3.0 execution decisions (09-02):
 - Phase 11 planned (2026-06-03): 4 plans in 3 waves. Wave 1: 11-01 (deps+pdf_report.py), 11-02 (tab restructure+charts). Wave 2: 11-03 (filters+comparison+drill-down). Wave 3: 11-04 (export buttons+tests). Ready to execute.
 - Phase 11 Plan 02 complete (2026-06-03): app.py restructured into 3-tab layout; Charts tab with px.scatter + px.bar; VIEW-01 delivered. Commit: 7c766fc.
 - Phase 11 Plan 03 complete (2026-06-03): Campaign Actions tab extended with filter/sort expander, comparison checkboxes, inline session drill-down, and side-by-side comparison section; VIEW-02 and VIEW-03 delivered. Commits: 8b28cad (feat), de4a0e8 (docs).
+- Phase 11 Plan 04 complete (2026-06-03): PDF and CSV export buttons wired into Campaign Actions tab; generate_pdf integrated with meta dict; 5 tests added to test_pdf_report.py; Rule 1 fix for fpdf2 em dash encoding issue; MGMT-02 delivered. Commits: 7979d9c (feat), de3cc74 (test).
+- Export buttons decision: fpdf2 built-in Helvetica font is latin-1 only; em dash replaced with ASCII hyphen in empty source_platforms fallback.
+- Phase 11 complete. All 4 plans done. 129 tests pass (2 pre-existing deploy_config failures unchanged).
 
 ### Blockers/Concerns
 
@@ -102,6 +105,6 @@ v3.0 execution decisions (09-02):
 
 ## Session Continuity
 
-Last session: 2026-06-03T00:10:00Z
-Stopped at: Plan 11-03 complete — ready for Plan 11-04 (export buttons + tests)
+Last session: 2026-06-03T05:37:16Z
+Stopped at: Plan 11-04 complete — Phase 11 fully done; ready for Phase 12
 Resume file: None
