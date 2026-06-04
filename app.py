@@ -18,7 +18,11 @@ load_dotenv()
 
 import st_db  # Phase 12: Streamlit-side DB module
 import psycopg2  # Phase 12: for OperationalError catch in Save and sidebar
-st_db.init_db()  # Phase 12: idempotent table creation — safe on every rerun
+try:
+    st_db.init_db()  # Phase 12: idempotent table creation — safe on every rerun
+except (RuntimeError, psycopg2.OperationalError) as _db_init_err:
+    import logging as _logging
+    _logging.warning("Postgres unavailable at startup — persistence features disabled: %s", _db_init_err)
 
 BRANDED_HEADER_HTML = """
 <div style="
@@ -534,7 +538,7 @@ if st.session_state["merged_df"] is not None:
                             }
                             st_db.save_analysis(_save_label or "Untitled", _payload)
                             st.success("Saved.")
-                        except psycopg2.OperationalError:
+                        except (psycopg2.OperationalError, RuntimeError):
                             st.error("Could not save — Postgres unavailable.")
             st.divider()
 
