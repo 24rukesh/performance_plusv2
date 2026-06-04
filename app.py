@@ -9,12 +9,16 @@ from openai import OpenAI
 from data import compute_campaign_agg
 from dotenv import load_dotenv
 import llm
-from llm import run_analysis, count_prompt_tokens
+from llm import run_analysis, count_prompt_tokens, AnalysisResult
 from ui_helpers import _badge_html, _pct_html, build_exec_summary_html
 from pdf_report import generate_pdf
 from ingest import SUPPORTED_CURRENCIES, REQUIRED_CRM_FIELDS, auto_suggest_crm_columns, ingest
 
 load_dotenv()
+
+import st_db  # Phase 12: Streamlit-side DB module
+import psycopg2  # Phase 12: for OperationalError catch in Save and sidebar
+st_db.init_db()  # Phase 12: idempotent table creation — safe on every rerun
 
 BRANDED_HEADER_HTML = """
 <div style="
@@ -139,6 +143,8 @@ _state_defaults = {
     "demo_mode_active": False,
     # Phase 10 addition:
     "token_warning_confirmed": False,
+    # Phase 12 addition (D-13):
+    "api_fallback_active": False,
 }
 for k, v in _state_defaults.items():
     if k not in st.session_state:
@@ -391,6 +397,7 @@ if st.session_state["merged_df"] is not None:
 
             if _show_run_analysis:
                 if st.button("Run Analysis", type="primary"):
+                    st.session_state["api_fallback_active"] = False  # Phase 12: reset before each run (D-13)
                     error_occurred = False
                     with st.status("Analysing campaigns...", expanded=True) as status:
                         status.write("Loading demo analysis..." if demo_ready else "Calling gpt-4o...")
@@ -412,6 +419,10 @@ if st.session_state["merged_df"] is not None:
 
     if st.session_state["analysis_result"] is not None:
         result = st.session_state["analysis_result"]
+
+        # Phase 12 D-08: runtime API fallback banner
+        if st.session_state.get("api_fallback_active"):
+            st.warning("OpenAI API unavailable — showing cached demo results")
 
         # Derive qualified_leads_count inline — campaign_agg does NOT have this column
         qual_counts = (
