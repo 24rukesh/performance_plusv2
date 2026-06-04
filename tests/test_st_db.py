@@ -205,3 +205,88 @@ def test_log_analysis_run_swallows_psycopg2_error(monkeypatch):
             latency_ms=1500,
             api_fallback_active=False,
         )
+
+
+# ---------------------------------------------------------------------------
+# Test 9: Full CRUD round-trip — save -> list -> load -> delete
+# ---------------------------------------------------------------------------
+
+def _make_staged_conn(fetchone_val=None, fetchall_val=None):
+    """Build a mock (conn, cursor) pair with pre-configured return values.
+
+    Follows the same double-context-manager protocol as _make_mock_conn().
+    Returns (mock_conn, mock_cursor) so callers can assert on mock_cursor.
+    """
+    mock_cursor = MagicMock()
+    mock_cursor.fetchone.return_value = fetchone_val
+    mock_cursor.fetchall.return_value = fetchall_val if fetchall_val is not None else []
+
+    cursor_cm = MagicMock()
+    cursor_cm.__enter__ = MagicMock(return_value=mock_cursor)
+    cursor_cm.__exit__ = MagicMock(return_value=False)
+
+    mock_conn = MagicMock()
+    mock_conn.cursor.return_value = cursor_cm
+    mock_conn.__enter__ = MagicMock(return_value=mock_conn)
+    mock_conn.__exit__ = MagicMock(return_value=False)
+
+    return mock_conn, mock_cursor
+
+
+def test_crud_round_trip(monkeypatch):
+    """Full CRUD round-trip: save -> list -> load -> delete with mocked psycopg2.
+
+    Verifies:
+      Stage 1 (save):   Returns the id from RETURNING clause (99).
+      Stage 2 (list):   Returns list with correct id, label, saved_at.
+      Stage 3 (load):   Returns payload dict equal to what was saved.
+      Stage 4 (delete): Executes DELETE with correct id parameter.
+    """
+    monkeypatch.setenv("DATABASE_URL", "postgresql://fake/db")
+
+    sample_payload = {
+        "analysis_result": {
+            "executive_summary": "Test summary — round-trip integrity check",
+            "campaigns": [],
+        },
+        "campaign_agg": [{"campaign_id": "cmp_1", "spend": 100.0}],
+        "merged_df": [{"session_id": "s1"}],
+    }
+
+    saved_at = datetime(2026, 6, 4, 12, 0, 0)
+
+    # Build four independent connection mocks — one per CRUD call
+    conn_save, cur_save = _make_staged_conn(fetchone_val=(99,))
+    conn_list, cur_list = _make_staged_conn(fetchall_val=[(99, "Round-trip test", saved_at)])
+    conn_load, cur_load = _make_staged_conn(fetchone_val=(sample_payload,))
+    conn_delete, cur_delete = _make_staged_conn()
+
+    with patch(
+        "st_db.psycopg2.connect",
+        side_effect=[conn_save, conn_list, conn_load, conn_delete],
+    ):
+        # Stage 1: save_analysis — must return id=99
+        run_id = st_db.save_analysis("Round-trip test", sample_payload)
+        assert run_id == 99, f"Expected run_id=99, got {run_id}"
+
+        # Stage 2: list_analyses — must return 1 entry with correct fields
+        rows = st_db.list_analyses()
+        assert len(rows) == 1, f"Expected 1 row, got {len(rows)}"
+        assert rows[0]["id"] == 99
+        assert rows[0]["label"] == "Round-trip test"
+        assert rows[0]["saved_at"] == saved_at
+
+        # Stage 3: load_analysis — payload dict must match what was saved (round-trip integrity)
+        loaded_payload = st_db.load_analysis(99)
+        assert loaded_payload == sample_payload, (
+            "Round-trip integrity failed: loaded payload does not equal saved payload"
+        )
+
+        # Stage 4: delete_analysis — must call DELETE with correct id parameter
+        st_db.delete_analysis(99)
+        cur_delete.execute.assert_called_once()
+        delete_call = cur_delete.execute.call_args
+        delete_sql = delete_call.args[0]
+        delete_params = delete_call.args[1]
+        assert "analysis_runs" in delete_sql, "DELETE SQL must reference analysis_runs table"
+        assert delete_params == (99,), f"Expected params=(99,), got {delete_params}"
