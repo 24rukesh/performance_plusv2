@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: — Advanced Analytics & Multi-Source
 status: in_progress
-stopped_at: Phase 11 complete — all 4 plans done, 129 tests pass (2026-06-04)
+stopped_at: Phase 12 context gathered — st_db.py + DEMO_MODE fallback + save/load UI decisions locked (2026-06-04)
 last_updated: "2026-06-04"
-last_activity: "2026-06-04 — Phase 11 complete: VIEW-01/02/03 + MGMT-02 delivered; 3-tab layout, Charts, Filters, Comparison, Drill-down, PDF+CSV export all verified 15/15; Phase 12 is next"
+last_activity: "2026-06-04 — Phase 12 discuss-phase complete: 12 decisions across DB access (st_db.py direct psycopg2), state fidelity (full restore), DEMO_MODE auto-catch, and Save/Load UI placement captured in 12-CONTEXT.md"
 progress:
   total_phases: 4
   completed_phases: 3
