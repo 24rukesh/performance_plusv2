@@ -101,3 +101,67 @@
 - Model mix: ~100% Sonnet 4.6
 - Sessions: 1 (2026-06-01)
 - Notable: Infrastructure config plans 2–3 min; code/component plans 5–22 min; Next.js scaffold slowest (22 min, dominated by npm install)
+
+---
+
+## Milestone: v3.0 — Advanced Analytics & Multi-Source
+
+**Shipped:** 2026-06-04
+**Phases:** 4 (9–12) | **Plans:** 17 | **Sessions:** 3–4 (2026-06-01 → 2026-06-04)
+
+### What Was Built
+
+- `ingest.py` — Multi-source ingestion with 17-currency FX normalization, source-prefix concat, auto-suggest CRM column mapping
+- `data.py` rewrite — Per-platform spend pivot, `source_platforms` field, SLUG_TO_DISPLAY constant, CRM extra column pass-through
+- `llm.py` — Required `source_platforms` Pydantic field, cross-platform SYSTEM_PROMPT rules, tiktoken `count_prompt_tokens` (o200k_base)
+- `pdf_report.py` — Standalone fpdf2 PDF generation module, `generate_pdf(result, meta) -> bytes`
+- `app.py` — 3-tab results layout, Plotly charts, Filters/Sort/Comparison/Drill-down, token gate UI, Save/Load sidebar
+- `st_db.py` — psycopg2 CRUD module for analysis_runs + analysis_logs; mocked unit tests; startup guard
+
+### What Worked
+
+- **Module-first architecture** — `ingest.py` and `st_db.py` as standalone modules with no Streamlit import made them trivially testable and prevented circular imports
+- **Incremental test co-authoring** — tests written alongside implementation in each plan (not deferred to a separate test plan); 49+ tests passing before Plan 10-04 even ran
+- **Frozen decision notes in PLAN.md context blocks** — `D-12 override: o200k_base` style annotations prevented the tiktoken encoding error that would have silently undercounted tokens
+- **Wave-based plan ordering** — ingest (09-01) → data layer (10-01) → schema (10-02) → UI (10-03) → tests (10-04) created a clear dependency chain with no re-work between plans
+- **`<details>` collapse pattern** — previous milestone phases collapsing in ROADMAP.md kept ROADMAP context lean for v3.0 planning
+
+### What Was Inefficient
+
+- **REQUIREMENTS.md checkbox gap at milestone close** — MGMT-01 and MGMT-03 were implemented in Phase 12 but never ticked off in REQUIREMENTS.md; discovered only during complete-milestone. Plans should update REQUIREMENTS.md checkboxes in SUMMARY.md completion notes.
+- **Gap-closure phase (12-05)** — Code review caught `init_db()` startup crash + save-button `RuntimeError` handling + DEMO_MODE test env issues. A stricter Phase 12 review gate would have caught these before the plans closed.
+- **Audit frontmatter/body divergence** — Audit was generated mid-milestone (before Phase 12), body never re-generated after Phase 12 completed; frontmatter was updated but body text was stale at milestone close.
+
+### Patterns Established
+
+- **Standalone utility module pattern** — `pdf_report.py` and `st_db.py` both import no Streamlit; TYPE_CHECKING guard for cross-module types; pure-Python so they're importable in tests without Streamlit overhead
+- **Double-context-manager Postgres pattern** — `with conn: / with conn.cursor() as cur: / finally: conn.close()` — matches api/db.py, now also in st_db.py; use this for any new Postgres module
+- **chart_df outside tabs** — compute heavy DataFrames before `st.tabs()` call to avoid recompute on tab switch; Streamlit re-runs the full script on each tab click
+- **Token gate two-pass pattern** — `_show_run_analysis` flag + `st.rerun()` on confirm avoids nesting `st.button` inside another `st.button` handler
+- **Startup guard pattern** — `try: st_db.init_db() except Exception: pass` — any infrastructure call at startup must be wrapped so DB unavailability doesn't prevent app load
+
+### Key Lessons
+
+1. **Update REQUIREMENTS.md during execution, not at milestone close.** Phase SUMMARY.md completion notes should explicitly tick off REQ-IDs; don't leave this for the milestone close workflow.
+2. **Audit mid-milestone creates stale body text.** Either re-run the audit after the final phase, or note that the body is a snapshot and the frontmatter is authoritative.
+3. **difflib is sufficient for 4-field fuzzy matching.** rapidfuzz is unnecessary overhead for small fixed-field CRM mapping — stdlib difflib.get_close_matches handles it cleanly.
+4. **tiktoken encoding matters.** o200k_base vs cl100k_base is a correctness issue, not just performance — wrong encoding silently undercounts gpt-4o tokens, making the 60k gate ineffective.
+5. **fpdf2 requires `bytes(pdf.output())`** — pytearray is not accepted by st.download_button; this is documented in the fpdf2 Streamlit example but easy to miss.
+
+### Cost Observations
+
+- Model mix: ~100% Sonnet 4.6
+- Sessions: 3–4 over 3 days (2026-06-01 → 2026-06-04)
+- Notable: Data layer plans (ingest, data.py rewrite) ~5–10 min; UI restructure plans (app.py 3-tab rewrite) ~9–25 min; test/eval plans ~2–5 min; gap-closure (12-05) ~15 min
+
+---
+
+## Cross-Milestone Trends
+
+| Milestone | Plans | Avg/Plan | Req Coverage | Issues Found |
+|-----------|-------|----------|--------------|--------------|
+| v1.0-design | 2 | 2 min | 4/4 (100%) | 0 |
+| v2.0 | 13 | ~5 min | 18/18 (100%) | 0 |
+| v3.0 | 17 | ~4 min | 12/12 (100%) | 1 gap-closure phase |
+
+*Updated at each milestone close.*

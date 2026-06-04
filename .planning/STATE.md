@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: — Advanced Analytics & Multi-Source
-status: complete
-stopped_at: Phase 12 gap-closure complete — 5/5 plans done; all gaps closed; v3.0 milestone fully delivered (2026-06-04)
+status: archived
+stopped_at: v3.0 milestone archived 2026-06-04 — all 12 requirements satisfied, 17 plans complete, 139 tests pass
 last_updated: "2026-06-04"
-last_activity: "2026-06-04 — Phase 12 gap-closure (plan 12-05): init_db() startup guard, save-button RuntimeError catch, test_evals.py DEMO_MODE hardening. 8/8 must-haves verified. 139 tests pass."
+last_activity: "2026-06-04 — v3.0 milestone closed: archives written, ROADMAP.md collapsed, PROJECT.md evolved, RETROSPECTIVE.md updated. Ready for next milestone."
 progress:
   total_phases: 4
   completed_phases: 4
@@ -18,10 +18,10 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-06-01 after v2.0 milestone)
+See: .planning/PROJECT.md (updated 2026-06-04 after v3.0 milestone)
 
 **Core value:** A marketer can load demo data and instantly get AI-reasoned budget routing decisions based on what sales reps said about each lead — not just what the click data shows.
-**Current focus:** v3.0 milestone complete — all phases delivered
+**Current focus:** v3.0 archived — planning next milestone via /gsd:new-milestone
 
 ## Current Position
 

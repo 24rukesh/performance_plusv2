@@ -73,3 +73,43 @@ All 18 v2.0 requirements satisfied (LAND-01..04, WAIT-01..03, API-01..05, UI-03.
 
 ---
 *Milestone v2.0 close: 2026-06-01*
+
+## v3.0 — Advanced Analytics & Multi-Source
+
+**Shipped:** 2026-06-04
+**Phases:** 9–12 | **Plans:** 17 | **Requirements:** 12/12
+**Python:** ~2,446 LOC | **TypeScript:** ~990 LOC
+**Timeline:** 2026-06-01 → 2026-06-04 (3-day sprint)
+**Tests:** 139 passing, 2 pre-existing failures unchanged
+
+### Delivered
+
+Transformed the single-CSV Streamlit demo into a full multi-source analytics platform: four-platform upload grid with per-file currency selection and FX normalization, auto-suggest CRM column mapping UI, per-platform spend breakdown in AI recommendations, interactive Plotly charts (scatter + bar), filters/sort/comparison/drill-down UI, PDF + CSV export, and Postgres-backed save/reload of analyses — all while keeping the demo functional offline via OpenAI error fallback.
+
+### Key Accomplishments
+
+1. **Multi-source ingestion pipeline** (Phase 9) — New `ingest.py` module with 17-currency FX normalization via `FX_RATES`, auto-suggest CRM column mapping using difflib, source-prefix renaming before pd.concat (collision guard), and 26 unit tests; 4-platform fixture CSVs (Google Ads USD, Meta Ads EUR, LinkedIn GBP, Custom USD) added to data generator
+2. **Cross-platform LLM analysis** (Phase 10) — Extended `data.py` with per-platform spend/session pivot columns and `source_platforms` pipe-delimited field; `CampaignAction.source_platforms` as required Pydantic field enforced by OpenAI Structured Outputs; tiktoken `count_prompt_tokens()` with o200k_base encoding + 60k token gate UI; two new SYSTEM_PROMPT cross-platform comparison rules
+3. **Interactive charts layout** (Phase 11) — 3-tab results layout (Data Preview / Charts / Campaign Actions); Plotly Express scatter (spend vs qualified leads, color=source_platforms) + bar (action distribution) charts; `qualified_leads_count` derived inline from merged_df with case-insensitive filter
+4. **Filters, comparison & export** (Phase 11) — Filters & Sort expander (5 controls), max-3 campaign side-by-side comparison with `disabled=not can_add` enforcement, session-level drill-down inline dataframe, `generate_pdf()` with fpdf2 `table()` CM + `bytes(pdf.output())`, CSV download via st.download_button
+5. **Analysis persistence** (Phase 12) — New `st_db.py` Postgres CRUD module (`analysis_runs` + `analysis_logs` tables); Save Analysis button + Past Analyses sidebar with Load/Delete; `AnalysisResult.model_validate()` restores session state without re-uploading CSVs; 9 mocked unit tests
+6. **OpenAI fallback (DEMO_MODE)** (Phase 12) — `run_analysis()` wraps `openai.OpenAIError` → `_load_fixture()`; `api_fallback_active` banner above tabs; `init_db()` startup guard prevents crash on DB unavailability; eval harness tests for AI-SPEC Dimensions 1, 3, 7
+
+### Requirements Completed
+
+All 12 v3.0 requirements satisfied (INGEST-01..03, AGENT-01..03, VIEW-01..03, MGMT-01..03).
+
+### Known Tech Debt at Close
+
+- No VERIFICATION.md for Phases 9 and 10 — VALIDATION.md (nyquist_compliant: true) covers both; low severity
+- `data.py::load_demo_data()` dead code — only in tests; safe to remove in v4.0
+- 2 pre-existing test_deploy_config.py failures (Dockerfile non-root + base image) since Phase 4
+
+### Archives
+
+- `.planning/milestones/v3.0-ROADMAP.md` — Roadmap snapshot at close
+- `.planning/milestones/v3.0-REQUIREMENTS.md` — Requirements archive (all 12 satisfied)
+- `.planning/milestones/v3.0-MILESTONE-AUDIT.md` — Audit report (passed, 12/12)
+
+---
+*Milestone v3.0 close: 2026-06-04*
