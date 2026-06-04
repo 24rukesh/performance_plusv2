@@ -12,10 +12,10 @@
     },
     {
       "campaign_id": "cmp_brand_awareness",
-      "budget_action": "insufficient_data",
-      "percentage_change": 0,
-      "semantic_reasoning": "Sales notes define prospects as 'Top-of-funnel only,' lacking solid indicators for budget adjustment.",
-      "confidence": 0.5,
+      "budget_action": "decrease",
+      "percentage_change": -15,
+      "semantic_reasoning": "Sales notes describe prospects as 'Top-of-funnel only,' with no purchase signals — reduce spend until deeper intent is captured.",
+      "confidence": 0.6,
       "evidence_count": 2,
       "source_platforms": ["Meta Ads"]
     },
