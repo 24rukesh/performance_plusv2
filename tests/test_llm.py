@@ -210,3 +210,10 @@ def test_count_prompt_tokens_scales_with_data():
 def test_system_prompt_contains_cross_platform_rule():
     assert "Cross-platform" in SYSTEM_PROMPT
     assert "source_platforms" in SYSTEM_PROMPT
+
+
+def test_fixture_validates_against_current_schema():
+    """Guard against fixture drift when Phase 12 schema changes are made (AI-SPEC §5 Dim 3)."""
+    result = llm._load_fixture()
+    assert isinstance(result, AnalysisResult)
+    assert len(result.campaigns) >= 3
