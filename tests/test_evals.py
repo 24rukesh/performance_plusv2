@@ -59,6 +59,8 @@ def test_openai_error_triggers_fallback(exc_class, monkeypatch):
     mock_st = MagicMock()
     mock_st.session_state = {}
     monkeypatch.setitem(sys.modules, "streamlit", mock_st)
+    monkeypatch.delenv("DEMO_MODE", raising=False)
+    monkeypatch.setattr("llm.client", MagicMock())
 
     exc = _make_openai_exc(exc_class)
 
@@ -80,6 +82,8 @@ def test_value_error_does_not_trigger_fallback(monkeypatch):
     mock_st = MagicMock()
     mock_st.session_state = {}
     monkeypatch.setitem(sys.modules, "streamlit", mock_st)
+    monkeypatch.delenv("DEMO_MODE", raising=False)
+    monkeypatch.setattr("llm.client", MagicMock())
 
     with patch("llm._call_llm", side_effect=ValueError("bad input")):
         with pytest.raises(ValueError, match="bad input"):
