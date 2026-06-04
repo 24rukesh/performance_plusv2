@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: — Advanced Analytics & Multi-Source
 status: complete
-stopped_at: Phase 12 complete — all 4 plans done; v3.0 milestone fully delivered (2026-06-04)
+stopped_at: Phase 12 gap-closure complete — 5/5 plans done; all gaps closed; v3.0 milestone fully delivered (2026-06-04)
 last_updated: "2026-06-04"
-last_activity: "2026-06-04 — Phase 12 complete: st_db.py persistence, llm.py fallback, app.py UI, test_evals.py eval harness. 139 tests pass. v3.0 milestone complete."
+last_activity: "2026-06-04 — Phase 12 gap-closure (plan 12-05): init_db() startup guard, save-button RuntimeError catch, test_evals.py DEMO_MODE hardening. 8/8 must-haves verified. 139 tests pass."
 progress:
   total_phases: 4
   completed_phases: 4
-  total_plans: 16
-  completed_plans: 16
+  total_plans: 17
+  completed_plans: 17
   percent: 100
 ---
 
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-01 after v2.0 milestone)
 ## Current Position
 
 Phase: 12 complete; all phases done
-Plan: 12-04 complete; Phase 12 fully delivered (4/4 plans)
-Status: Phase 12 complete — all plans done; MGMT-01, MGMT-03 delivered; v3.0 milestone complete
-Last activity: 2026-06-04 — Phase 12 complete: st_db.py persistence, llm.py fallback, app.py UI, test_evals.py eval harness. 139 tests pass. v3.0 milestone complete.
+Plan: 12-05 complete; Phase 12 fully delivered (5/5 plans, gap-closure done)
+Status: Phase 12 complete — all gaps closed; MGMT-01, MGMT-03 fully verified (8/8); v3.0 milestone complete
+Last activity: 2026-06-04 — Phase 12 gap-closure (plan 12-05): init_db() startup guard, save-button RuntimeError catch, test_evals.py DEMO_MODE hardening. 8/8 must-haves verified. 139 tests pass.
 
 Progress: [██████████] 100% (v3.0 milestone, 4 of 4 phases complete)
 
