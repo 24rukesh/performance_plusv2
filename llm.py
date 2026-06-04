@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Literal
 
 import pandas as pd
+import openai
 from openai import OpenAI
 from pydantic import BaseModel, Field
 from tenacity import (
@@ -116,13 +117,41 @@ def _call_llm(csv_text: str) -> AnalysisResult:
 
 
 def run_analysis(campaign_agg: pd.DataFrame) -> AnalysisResult:
-    """Serialize campaign_agg as CSV and send to gpt-4o. Returns a validated AnalysisResult."""
+    """Serialize campaign_agg as CSV and send to gpt-4o. Returns a validated AnalysisResult.
+
+    On any OpenAI API error, falls back to fixture and sets
+    st.session_state["api_fallback_active"] = True (D-07).
+    """
     # per D-01, D-11: fixture path when DEMO_MODE=1 and no live key is present
     if os.environ.get("DEMO_MODE") == "1" and client is None:
         return _load_fixture()
     t0 = time.perf_counter()
     csv_text = campaign_agg.to_csv(index=False)
-    result = _call_llm(csv_text)
+    _fallback_fired = False
+    _err_type = None
+    try:
+        result = _call_llm(csv_text)
+    except openai.OpenAIError as exc:
+        _fallback_fired = True
+        _err_type = type(exc).__name__
+        logger.warning("OpenAI API error — falling back to fixture: %s", exc)
+        import streamlit as st
+        if hasattr(st, "session_state"):
+            st.session_state["api_fallback_active"] = True
+        result = _load_fixture()
+    try:
+        import st_db as _st_db
+        _st_db._log_analysis_run(
+            run_mode="fixture" if _fallback_fired else "live",
+            error_type=_err_type,
+            campaign_count=len(result.campaigns),
+            latency_ms=int((time.perf_counter() - t0) * 1000),
+            api_fallback_active=_fallback_fired,
+        )
+    except Exception:
+        pass
+    if _fallback_fired:
+        return result
     logger.info(
         "run_analysis completed in %.2fs | campaigns=%d",
         time.perf_counter() - t0,
