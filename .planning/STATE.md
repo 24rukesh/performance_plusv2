@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: — Advanced Analytics & Multi-Source
 status: in_progress
-stopped_at: Phase 11 Plan 04 complete (2026-06-03)
-last_updated: "2026-06-03"
-last_activity: "2026-06-03 — Phase 11 Plan 04 complete: PDF and CSV export buttons wired; 5 new test_pdf_report.py tests pass; MGMT-02 delivered"
+stopped_at: Phase 11 complete — all 4 plans done, 129 tests pass (2026-06-04)
+last_updated: "2026-06-04"
+last_activity: "2026-06-04 — Phase 11 complete: VIEW-01/02/03 + MGMT-02 delivered; 3-tab layout, Charts, Filters, Comparison, Drill-down, PDF+CSV export all verified 15/15; Phase 12 is next"
 progress:
   total_phases: 4
   completed_phases: 3
   total_plans: 12
-  completed_plans: 11
-  percent: 65
+  completed_plans: 12
+  percent: 75
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-01 after v2.0 milestone)
 
 **Core value:** A marketer can load demo data and instantly get AI-reasoned budget routing decisions based on what sales reps said about each lead — not just what the click data shows.
-**Current focus:** v3.0 — Phase 10: Richer LLM Analysis
+**Current focus:** v3.0 — Phase 12: Analysis Persistence (next)
 
 ## Current Position
 
-Phase: 10 of 12 (Richer LLM Analysis)
-Plan: 11-04 complete; Phase 11 complete (all 4 plans done)
+Phase: 11 complete; 12 is next
+Plan: 11-04 complete; Phase 11 fully verified (15/15)
 Status: Phase 11 complete — all plans done; MGMT-02, VIEW-01, VIEW-02, VIEW-03 delivered
-Last activity: 2026-06-03 — Phase 11 Plan 04 complete: PDF and CSV export buttons wired into Campaign Actions tab; 5 test_pdf_report.py tests pass; 129 tests pass total
+Last activity: 2026-06-04 — Phase 11 complete: 3-tab layout, charts, filters, comparison, drill-down, PDF+CSV export. 129 tests pass (5 new test_pdf_report.py). Phase 12 (Analysis Persistence) is next.
 
-Progress: [████░░░░░░] 50% (v3.0 milestone, Phase 10 of 4 phases complete)
+Progress: [███████░░░] 75% (v3.0 milestone, 3 of 4 phases complete)
 
 ## Performance Metrics
 
@@ -81,15 +81,10 @@ v3.0 execution decisions (09-02):
 
 ### Pending Todos
 
-- Phase 10 complete (2026-06-02). All 4 plans done. 49 tests pass.
-- Phase 10 commits: 7462345 (crm_ pass-through), c31b532 (compute_campaign_agg multi-source), 3e6b04a (llm.py schema+prompt+tiktoken), cda5a78 (fixture+tiktoken install), 9ecbf14 (app.py token gate+bridge removal).
-- AGENT-01, AGENT-02, AGENT-03 requirements met by Phase 10.
-- Phase 11 planned (2026-06-03): 4 plans in 3 waves. Wave 1: 11-01 (deps+pdf_report.py), 11-02 (tab restructure+charts). Wave 2: 11-03 (filters+comparison+drill-down). Wave 3: 11-04 (export buttons+tests). Ready to execute.
-- Phase 11 Plan 02 complete (2026-06-03): app.py restructured into 3-tab layout; Charts tab with px.scatter + px.bar; VIEW-01 delivered. Commit: 7c766fc.
-- Phase 11 Plan 03 complete (2026-06-03): Campaign Actions tab extended with filter/sort expander, comparison checkboxes, inline session drill-down, and side-by-side comparison section; VIEW-02 and VIEW-03 delivered. Commits: 8b28cad (feat), de4a0e8 (docs).
-- Phase 11 Plan 04 complete (2026-06-03): PDF and CSV export buttons wired into Campaign Actions tab; generate_pdf integrated with meta dict; 5 tests added to test_pdf_report.py; Rule 1 fix for fpdf2 em dash encoding issue; MGMT-02 delivered. Commits: 7979d9c (feat), de3cc74 (test).
-- Export buttons decision: fpdf2 built-in Helvetica font is latin-1 only; em dash replaced with ASCII hyphen in empty source_platforms fallback.
-- Phase 11 complete. All 4 plans done. 129 tests pass (2 pre-existing deploy_config failures unchanged).
+- Phase 11 complete (2026-06-04). All 4 plans done. 129 tests pass (2 pre-existing deploy_config failures unchanged). VIEW-01/02/03 + MGMT-02 verified 15/15.
+- Phase 11 commits: a3cce86 (plotly+fpdf2 deps), 6bcd149 (pdf_report.py), 7c766fc (3-tab layout), 8b28cad (filters+comparison), 7979d9c (export buttons), de3cc74 (test_pdf_report.py).
+- Phase 11 execution note: fpdf2 Helvetica font is latin-1 only — em dash replaced with ASCII hyphen for empty source_platforms fallback in pdf_report.py.
+- Phase 12 (Analysis Persistence) is next: MGMT-01 + MGMT-03, Postgres JSONB storage, save/reload analyses, DEMO_MODE fixture fallback.
 
 ### Blockers/Concerns
 
@@ -105,6 +100,6 @@ v3.0 execution decisions (09-02):
 
 ## Session Continuity
 
-Last session: 2026-06-03T05:37:16Z
-Stopped at: Plan 11-04 complete — Phase 11 fully done; ready for Phase 12
+Last session: 2026-06-04
+Stopped at: Phase 11 complete — verification passed 15/15; Phase 12 is next
 Resume file: None
