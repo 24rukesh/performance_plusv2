@@ -121,6 +121,28 @@ with st.sidebar:
     if st.session_state.get("demo_mode_active"):
         st.caption("Demo data loaded — 4 platforms + CRM.")
 
+    # Phase 12 D-11: Past Analyses section
+    st.subheader("Past Analyses")
+    try:
+        _past = st_db.list_analyses()
+        if not _past:
+            st.caption("No saved analyses yet.")
+        for _row in _past:
+            _entry_label = f"{_row['label']} — {_row['saved_at'].strftime('%b %d, %H:%M')}"
+            _c1, _c2, _c3 = st.columns([3, 1, 1])
+            _c1.markdown(_entry_label)
+            if _c2.button("Load", key=f"load_run_{_row['id']}"):
+                _p = st_db.load_analysis(_row["id"])
+                st.session_state["analysis_result"] = AnalysisResult.model_validate(_p["analysis_result"])
+                st.session_state["campaign_agg"] = pd.DataFrame(_p["campaign_agg"])
+                st.session_state["merged_df"] = pd.DataFrame(_p["merged_df"])
+                st.rerun()
+            if _c3.button("✕", key=f"del_run_{_row['id']}"):
+                st_db.delete_analysis(_row["id"])
+                st.rerun()
+    except psycopg2.OperationalError:
+        st.sidebar.warning("Postgres unavailable — saved analyses cannot be shown.")
+
 # per D-05: info banner renders in main column above title when DEMO_MODE=1
 if DEMO_MODE:
     st.info("ℹ️ Running in demo mode — cached results, no live API call")
@@ -492,6 +514,30 @@ if st.session_state["merged_df"] is not None:
             st.plotly_chart(bar_fig, use_container_width=True)
 
         with tab_actions:
+            # Phase 12 D-10: Save Analysis — top of tab, before Filters & Sort
+            if st.session_state["analysis_result"] is not None:
+                _save_col, _btn_col = st.columns([4, 1])
+                with _save_col:
+                    _save_label = st.text_input(
+                        "Analysis label",
+                        key="save_label_input",
+                        placeholder="e.g. Q2 2026 Campaign Review",
+                    )
+                with _btn_col:
+                    st.write("")  # vertical alignment spacer
+                    if st.button("💾 Save", key="save_analysis_btn"):
+                        try:
+                            _payload = {
+                                "analysis_result": st.session_state["analysis_result"].model_dump(),
+                                "campaign_agg": st.session_state["campaign_agg"].to_dict(orient="records"),
+                                "merged_df": st.session_state["merged_df"].to_dict(orient="records"),
+                            }
+                            st_db.save_analysis(_save_label or "Untitled", _payload)
+                            st.success("Saved.")
+                        except psycopg2.OperationalError:
+                            st.error("Could not save — Postgres unavailable.")
+            st.divider()
+
             # Build platform options from result.campaigns (list[str], NOT pipe-delimited)
             all_platforms = sorted({p for c in result.campaigns for p in c.source_platforms})
 
