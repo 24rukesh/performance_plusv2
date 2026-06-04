@@ -66,8 +66,8 @@ See archive: `.planning/milestones/v2.0-ROADMAP.md`
 Plans:
 - [x] 09-01-PLAN.md — ingest.py module: FX_RATES, SUPPORTED_CURRENCIES, ingest() function with source-prefix rename + FX normalization + CRM merge (commit a5f3f6f, 2026-06-02)
 - [x] 09-02-PLAN.md — data_generator.py extension + 4 platform fixture CSVs (Google Ads USD, Meta Ads EUR, LinkedIn GBP, Custom USD) (commits 4bbfcf6 + 90835f9, 2026-06-02)
-- [ ] 09-03-PLAN.md — app.py upload section rewrite: 4-platform grid + CRM mapping UI + sidebar Reporting Currency + Load Demo Data + Run Analysis gate
-- [ ] 09-04-PLAN.md — tests/test_ingest.py: 24+ unit tests covering FX, happy path, error branches, column collision, CRM mapping
+- [x] 09-03-PLAN.md — app.py upload section rewrite: 4-platform grid + CRM mapping UI + sidebar Reporting Currency + Load Demo Data + Run Analysis gate
+- [x] 09-04-PLAN.md — tests/test_ingest.py: 24+ unit tests covering FX, happy path, error branches, column collision, CRM mapping
 
 ### Phase 10: Richer LLM Analysis
 **Goal**: AI recommendations reference cross-platform comparisons and each campaign action identifies which ad platforms contributed to it, while a token preflight guard prevents context window overflow
@@ -127,7 +127,7 @@ Phases execute in numeric order: 9 → 10 → 11 → 12
 | 6. Waitlist Backend | v2.0 | 2/2 | ✅ Complete | 2026-06-01 |
 | 7. Landing Page & UI Polish | v2.0 | 4/4 | ✅ Complete | 2026-06-01 |
 | 8. Infrastructure Update | v2.0 | 3/3 | ✅ Complete | 2026-06-01 |
-| 9. Multi-Source Ingestion | v3.0 | 1/4 | In progress | - |
+| 9. Multi-Source Ingestion | v3.0 | 4/4 | Complete | 2026-06-02 |
 | 10. Richer LLM Analysis | v3.0 | 4/4 | Complete | 2026-06-02 |
 | 11. Charts, Filters & Export | v3.0 | 4/4 | Complete | 2026-06-03 |
 | 12. Analysis Persistence | v3.0 | 0/TBD | Not started | - |
